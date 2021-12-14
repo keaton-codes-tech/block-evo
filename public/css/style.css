@@ -1,0 +1,36 @@
+html, body {
+    background-color: black;
+}
+
+#ui {
+    max-width: 25%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    border-radius: 5px;
+    background-color: grey;
+    flex-direction: column;
+}
+
+.panel {
+    background-color: lightgrey;
+    border-radius: 5px;
+    padding: 3px;
+    margin: 3px;
+}
+
+.panel>div {
+    padding: 3px;
+}
+
+/* centre the canvas */
+#canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: seashell;
+}
