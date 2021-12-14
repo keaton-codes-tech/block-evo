@@ -7,7 +7,7 @@ export class Block {
         this.x = x;
         this.y = y;
         this.brain = new NeuralNetwork(numInputs, numHiddens, numOutputs);
-        this.color = neuralNetworkTools.generateColorFromGenome(this.brain);
+        this.color = neuralNetworkTools.generateColorFromGenome(this.brain.connections);
     }
     paint(ctx) {
         ctx.fillStyle = this.color;

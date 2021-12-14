@@ -70,7 +70,7 @@ export const uiTools = {
         //for (let key in connections) {
         //console.log(connections);
         connections.forEach((connection) => {
-            let template = `<div class="brain-connection">Input: ${connection.input.name}, Output: ${connection.output.name}, Weight: ${connection.weight.toFixed(2)}</div>`;
+            let template = `<div class="brain-connection">Source: ${connection.source.name}, Sink: ${connection.sink.name}, Weight: ${connection.weight.toFixed(2)}</div>`;
             container.innerHTML += template;
         });
         if (target.innerHTML !== container.innerHTML) {

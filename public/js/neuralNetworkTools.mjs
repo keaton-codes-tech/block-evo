@@ -6,6 +6,7 @@ export const neuralNetworkTools = {
         {
             name: 'Slr',
             type: 'Pheromone',
+            layer: 'Input',
             typeID: '0',
             action: (target, value) => {
                 // Depends on this blocks grid position and the two blocks left and right of it
@@ -20,6 +21,7 @@ export const neuralNetworkTools = {
             name: 'Sfd',
             type: 'Pheromone',
             typeID: '1',
+            layer: 'Input',
             action: () => {
                 // Depends on this blocks grid position and the three blocks in front of it
                 console.log('Sfd');
@@ -29,6 +31,7 @@ export const neuralNetworkTools = {
             name: 'Sg',
             type: 'Pheromone',
             typeID: '2',
+            layer: 'Input',
             action: () => {
                 // Depends on this blocks grid position
                 console.log('Sg');
@@ -38,6 +41,7 @@ export const neuralNetworkTools = {
             name: 'Age',
             type: 'Internal',
             typeID: '0',
+            layer: 'Input',
             action: () => {
                 // Output starts at 0 and ends at 1 when the lifetime (total number of steps) is up
                 // Depends on number of steps (which need to be kept track of and have a finite amount of them to begin with)
@@ -48,6 +52,7 @@ export const neuralNetworkTools = {
             name: 'Rnd',
             type: 'Internal',
             typeID: '1',
+            layer: 'Input',
             action: () => {
                 // Not dependant on anything, just sends a random value between 0 and 1
                 console.log('Rnd');
@@ -57,6 +62,7 @@ export const neuralNetworkTools = {
             name: 'Osc',
             type: 'Internal',
             typeID: '2',
+            layer: 'Input',
             action: () => {
                 // Frequency of full oscillation wave is default to 25 steps
                 console.log('Osc');
@@ -66,6 +72,7 @@ export const neuralNetworkTools = {
             name: 'LMy',
             type: 'Internal',
             typeID: '3',
+            layer: 'Input',
             action: () => {
                 console.log('LMy');
             },
@@ -74,6 +81,7 @@ export const neuralNetworkTools = {
             name: 'LMx',
             type: 'Internal',
             typeID: '4',
+            layer: 'Input',
             action: () => {
                 console.log('LMx');
             },
@@ -82,6 +90,7 @@ export const neuralNetworkTools = {
             name: 'Blr',
             type: 'Environement',
             typeID: '0',
+            layer: 'Input',
             action: () => {
                 // Depends on this blocks grid position and the two blocks left and right of it
                 // Needs to know if that space exists or not (barrier) or if that space is empty or not (occupied already)
@@ -92,6 +101,7 @@ export const neuralNetworkTools = {
             name: 'Bfd',
             type: 'Environement',
             typeID: '1',
+            layer: 'Input',
             action: () => {
                 // Depends on this blocks grid position and the one block in front of it
                 // Needs to know if that space exists or not (barrier) or if that space is empty or not (occupied already)
@@ -102,6 +112,7 @@ export const neuralNetworkTools = {
             name: 'LBf',
             type: 'Environement',
             typeID: '2',
+            layer: 'Input',
             action: () => {
                 console.log('LBf');
             },
@@ -110,6 +121,7 @@ export const neuralNetworkTools = {
             name: 'BDy',
             type: 'Environement',
             typeID: '3',
+            layer: 'Input',
             action: () => {
                 // Depends on this blocks grid position
                 console.log('DBy');
@@ -119,6 +131,7 @@ export const neuralNetworkTools = {
             name: 'BDx',
             type: 'Environement',
             typeID: '4',
+            layer: 'Input',
             action: () => {
                 // Depends on this blocks grid position
                 console.log('BDx');
@@ -128,6 +141,7 @@ export const neuralNetworkTools = {
             name: 'Lx',
             type: 'Environement',
             typeID: '5',
+            layer: 'Input',
             action: () => {
                 // Depends on blocks grid coords
                 console.log('Lx');
@@ -137,6 +151,7 @@ export const neuralNetworkTools = {
             name: 'Ly',
             type: 'Environement',
             typeID: '6',
+            layer: 'Input',
             action: () => {
                 // Depends on blocks grid coords
                 console.log('Ly');
@@ -146,6 +161,7 @@ export const neuralNetworkTools = {
             name: 'BD',
             type: 'Environement',
             typeID: '7',
+            layer: 'Input',
             action: () => {
                 console.log('BD');
             },
@@ -154,6 +170,7 @@ export const neuralNetworkTools = {
             name: 'Plr',
             type: 'Social',
             typeID: '0',
+            layer: 'Input',
             action: () => {
                 console.log('Plr');
             },
@@ -162,6 +179,7 @@ export const neuralNetworkTools = {
             name: 'Pfd',
             type: 'Social',
             typeID: '1',
+            layer: 'Input',
             action: () => {
                 // Depends on the grid position of the block and the three blocks in front of it
                 // Output depends on the gradient of population density from its position through the three blocks in front of it
@@ -172,6 +190,7 @@ export const neuralNetworkTools = {
             name: 'Pop',
             type: 'Social',
             typeID: '2',
+            layer: 'Input',
             action: () => {
                 // Depends on the grid position of the block and its immediate neighbours
                 // The higher the population density, the higher the output
@@ -182,6 +201,7 @@ export const neuralNetworkTools = {
             name: 'LPf',
             type: 'Social',
             typeID: '3',
+            layer: 'Input',
             action: () => {
                 console.log('LPf');
             },
@@ -190,6 +210,7 @@ export const neuralNetworkTools = {
             name: 'Gen',
             type: 'Social',
             typeID: '4',
+            layer: 'Input',
             action: () => {
                 // Depends on knowledge of the grid space one block in the forward direction
                 // and knowlegde of the blocks brain if there is one present in that position
@@ -203,60 +224,70 @@ export const neuralNetworkTools = {
             name: 'SG',
             type: 'Pheromone',
             typeID: '3',
+            layer: 'Output',
             action: () => {},
         }, // Emit pheromone, increase pheromone density by 0.5 on current grid position
         {
             name: 'OSC',
             type: 'Internal',
             typeID: '5',
+            layer: 'Output',
             action: () => {},
         }, // Set oscillator period - increase or decrease the default period
         {
             name: 'Res',
             type: 'Internal',
             typeID: '6',
+            layer: 'Output',
             action: () => {},
         }, // Set responsiveness, increase or decrease the default responsiveness, lowers or raises the threshold probability of all input and output neurons firing
         {
             name: 'Mfd',
             type: 'Environement',
             typeID: '8',
+            layer: 'Output',
             action: () => {},
         }, // Move forward (last direction of movement = forward)
         {
             name: 'Mrn',
             type: 'Environement',
             typeID: '9',
+            layer: 'Output',
             action: () => {},
         }, // Move random
         {
             name: 'Mrv',
             type: 'Environement',
             typeID: '10',
+            layer: 'Output',
             action: () => {},
         }, // Move reverse
         {
             name: 'MRL',
             type: 'Environement',
             typeID: '11',
+            layer: 'Output',
             action: () => {},
         }, // Move left-right (+/-)
         {
             name: 'MX',
             type: 'Environement',
             typeID: '12',
+            layer: 'Output',
             action: () => {},
         }, // Move east-west (+/-)
         {
             name: 'MY',
             type: 'Environement',
             typeID: '13',
+            layer: 'Output',
             action: () => {},
         }, // Move north-south (+/-)
         {
             name: 'Kill',
             type: 'Social',
             typeID: '5',
+            layer: 'Output',
             action: () => {},
         }, // Kill forward neighbour
     ],
@@ -277,6 +308,7 @@ export const neuralNetworkTools = {
             hiddens.push({
                 name: `H${i}`,
                 type: 'Hidden',
+                layer: 'Hidden',
                 typeID: i,
             });
         }
@@ -301,15 +333,21 @@ export const neuralNetworkTools = {
             );
             if (index < hiddens.length) {
                 connections.push({
-                    input: inputs[i],
-                    output: hiddens[index],
-                    weight: neuralNetworkTools.getRandomNumberBetweenRange(0, 1),
+                    source: inputs[i],
+                    sink: hiddens[index],
+                    weight: neuralNetworkTools.getRandomNumberBetweenRange(
+                        0,
+                        1
+                    ),
                 });
             } else {
                 connections.push({
-                    input: inputs[i],
-                    output: outputs[index - hiddens.length],
-                    weight: neuralNetworkTools.getRandomNumberBetweenRange(0, 1),
+                    source: inputs[i],
+                    sink: outputs[index - hiddens.length],
+                    weight: neuralNetworkTools.getRandomNumberBetweenRange(
+                        0,
+                        1
+                    ),
                 });
             }
         }
@@ -321,17 +359,23 @@ export const neuralNetworkTools = {
             function processIndex() {
                 if (index < hiddens.length) {
                     connections.push({
-                        input: hiddens[i],
-                        output: hiddens[index],
-                        weight: neuralNetworkTools.getRandomNumberBetweenRange(-1, 1),
+                        source: hiddens[i],
+                        sink: hiddens[index],
+                        weight: neuralNetworkTools.getRandomNumberBetweenRange(
+                            -1,
+                            1
+                        ),
                     });
                 } else {
                     connections.push({
-                        input: hiddens[i],
-                        output: outputs[index - hiddens.length],
-                        weight: neuralNetworkTools.getRandomNumberBetweenRange(-1, 1),
+                        source: hiddens[i],
+                        sink: outputs[index - hiddens.length],
+                        weight: neuralNetworkTools.getRandomNumberBetweenRange(
+                            -1,
+                            1
+                        ),
                     });
-                }                 
+                }
             }
             processIndex();
 
@@ -363,35 +407,102 @@ export const neuralNetworkTools = {
     //     }
     //     return weights;
     // },
-    generateColorFromGenome(brain) {
+    generateColorFromGenome(connections) {
         // Generate a number between 0 and 255 for each of the three color channels
+        let globalRed = 0;
+        let globalGreen = 0;
+        let globalBlue = 0;
 
-        // Generate a colour per gene
+        // Generate a colour per gene (a connection represents a gene)
+        connections.forEach((connection) => {
+            // Source Layer: input = 0, hidden = 1
+            // Sink Layer: hidden = 0, output = 1
+            // Types: pheromone = 0, internal = 1, environement = 2, social = 3, hidden = 4 (space for 2 more types if needed)
+            // TypeIDs: unique for each type counting up from 1
 
-        // Source Layer: input = 0, hidden = 1
-        // Sink Layer: hidden = 0, output = 1
-        // Types: internal = 1, environement = 2, social = 3, pheromone = 4, hidden = 5 (space for 2 more types if needed)
-        // TypeIDs: unique for each type counting up from 1
+            // Red channel
+            // Bit 1 = Source Layer (input, hidden)
+            // Bit 2-4 = Source Type (allows for 7 different types)
+            // Bit 5-8 = Source TypeID (4 bits allows for 15 different IDs per type)
 
-        // Red channel
-        // Bit 1 = Source Layer (input, hidden)
-        // Bit 2-4 = Source Type (allows for 7 different types)
-        // Bit 5-8 = Source TypeID (4 bits allows for 15 different IDs per type)
+            // Green channel
+            // Bit 1 = Sink Layer (hidden, output)
+            // Bit 2-4 = Sink Type (allows for 7 different types)
+            // Bit 5-8 = Sink Type + ID (4 bits allows for 15 different IDs per type)
 
-        // Green channel
-        // Bit 1 = Sink Layer (hidden, output)
-        // Bit 2-4 = Sink Type (allows for 7 different types)
-        // Bit 5-8 = Sink Type + ID (4 bits allows for 15 different IDs per type)
+            // Source = Red, Sink = Green
+            function generateRedOrGreenColorChannel(channel, obj) {
+                let binaryChannel = '';
+                // Bit 1 = Source/Sink Layer (input, hidden)
+                if (channel === 'red') {
+                    if (obj.layer === 'Input') {
+                        binaryChannel += '0';
+                    } else {
+                        binaryChannel += '1';
+                    }
+                } else {
+                    if (obj.layer === 'Hidden') {
+                        binaryChannel += '0';
+                    } else {
+                        binaryChannel += '1';
+                    }
+                }
+                //console.log('Bit 1:', binaryChannel, 'channel:', channel);
+                
+                // Bit 2-4 = Source/Sink Type (allows for 7 different types)
+                if (obj.type === 'Pheromone') {
+                    binaryChannel += '000';
+                } else if (obj.type === 'Internal') {
+                    binaryChannel += '001';
+                } else if (obj.type === 'Environement') {
+                    binaryChannel += '010';
+                } else if (obj.type === 'Social') {
+                    binaryChannel += '011';
+                } else if (obj.type === 'Hidden') {
+                    binaryChannel += '100';
+                }
+                //console.log('Bits 1-4:', binaryChannel, 'channel:', channel);
 
-        // Blue channel
-        // Bit 1-8 = Weight (floating point weight is rounded off to 8 bits)
-        // weight.toString(2).substring(0, 8);
+                // Bit 5-8 = Source/Sink TypeID (4 bits allows for 15 different IDs per type)
+                binaryChannel += parseInt(obj.typeID).toString(2).padStart(4, '0');
+                //console.log('Bits 1-8:', binaryChannel, 'channel:', channel);
+                let base10Channel = parseInt(binaryChannel, 2);
+                if (channel === 'red') {
+                    globalRed += base10Channel;
+                    //console.log(`Red: ${base10Channel}`);
+                } else {
+                    globalGreen += base10Channel;
+                    //console.log(`Green: ${base10Channel}`);
+                }
+            }
 
-        // Do this for each gene and then add the channels together then divide by the number of genes to get a final colour
+            generateRedOrGreenColorChannel('red', connection.source);
+            generateRedOrGreenColorChannel('green', connection.sink);
 
-        // temp color
-        let color = 'red'
-        return color;
+            // Blue channel
+            // Bit 1-8 = Weight (floating point weight is rounded off to 8 bits)
+            // weight.toString(2).substring(0, 8);
+            
+            function generateBlueColorChannel(weight) {
+                weight = Math.abs(weight);
+                let binaryChannel = weight.toString(2).substring(2, 10).padStart(8, '0');
+                //console.log(`BlueBinary: ${binaryChannel}`);
+                let base10Channel = parseInt(binaryChannel, 2);
+                //console.log(`BlueBase10: ${base10Channel}`);
+                globalBlue += base10Channel;
+            }
+            generateBlueColorChannel(connection.weight);
+
+
+            // Do this for each gene and then add the channels together then divide by the number of genes to get a final colour
+        });
+
+        let finalRed = Math.floor(globalRed / connections.length);
+        let finalGreen = Math.floor(globalGreen / connections.length);
+        let finalBlue = Math.floor(globalBlue / connections.length);
+        let finalColor = `rgb(${finalRed}, ${finalGreen}, ${finalBlue})`;
+
+        return finalColor;
     },
     sigmoid(x) {
         return 1 / (1 + Math.exp(-x));
