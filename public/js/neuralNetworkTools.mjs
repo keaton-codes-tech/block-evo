@@ -396,17 +396,6 @@ export const neuralNetworkTools = {
         }
         return connections;
     },
-    // getRandomWeight(firstLayer, secondLayer) {
-    //     let weights = {};
-    //     for (let i = 0; i < firstLayer.length; i++) {
-    //         weights[firstLayer[i].name] = {};
-    //         for (let j = 0; j < secondLayer.length; j++) {
-    //             weights[firstLayer[i].name][secondLayer[j].name] =
-    //                 this.getRandomNumberBetweenRange(-1, 1);
-    //         }
-    //     }
-    //     return weights;
-    // },
     generateColorFromGenome(connections) {
         // Generate a number between 0 and 255 for each of the three color channels
         let globalRed = 0;
@@ -481,7 +470,6 @@ export const neuralNetworkTools = {
 
             // Blue channel
             // Bit 1-8 = Weight (floating point weight is rounded off to 8 bits)
-            // weight.toString(2).substring(0, 8);
             
             function generateBlueColorChannel(weight) {
                 if (weight >= 0){
@@ -496,12 +484,9 @@ export const neuralNetworkTools = {
                 }
 
             }
-            generateBlueColorChannel(connection.weight);
-
-
-            // Do this for each gene and then add the channels together then divide by the number of genes to get a final colour
+            generateBlueColorChannel(connection.weight);    
         });
-
+        // Do this for each gene and then add the channels together then divide by the number of genes to get a final colour
         let finalRed = Math.round(globalRed / connections.length);
         let finalGreen = Math.round(globalGreen / connections.length);
         let finalBlue = Math.round(globalBlue / connections.length);
