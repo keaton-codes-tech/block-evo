@@ -34,7 +34,6 @@ export const uiTools = {
     createInfoPanelElement: ({ id, label, value }) => {
         // create a div element
         const div = document.createElement('div');
-        div.id = id;
         div.classList.add = 'info-panel-element-container';
         // create a label element
         const labelElement = document.createElement('label');
@@ -51,7 +50,6 @@ export const uiTools = {
     createBlockInfoPanelElement: ({ id, label, value }) => {
         // create a div element
         const div = document.createElement('div');
-        div.id = id;
         div.classList.add = 'info-panel-element-container';
         // create a label element
         const labelElement = document.createElement('label');
@@ -65,12 +63,26 @@ export const uiTools = {
         div.appendChild(infoElement);
         return div;
     },
+    createBrainInfoPanelElements: (connections) => {
+        let target = document.getElementById('brain-info-panel');
+        let container = document.createElement('div');
+        // Iterate through the connections object
+        //for (let key in connections) {
+        //console.log(connections);
+        connections.forEach((connection) => {
+            let template = `<div class="brain-connection">Input: ${connection.input.name}, Output: ${connection.output.name}, Weight: ${connection.weight.toFixed(2)}</div>`;
+            container.innerHTML += template;
+        });
+        if (target.innerHTML !== container.innerHTML) {
+            target.innerHTML = container.innerHTML;
+        }
+    },
     // update the info panel
     updateInfo: () => {
         function checkIfElementNeedsUpdate(id, newVal) {
-            let prev = document.querySelector('#' + id + '>span').innerHTML;
+            let prev = document.querySelector('#' + id).innerHTML;
             if (prev != newVal) {
-                document.querySelector('#' + id + '>span').innerHTML = newVal;
+                document.querySelector('#' + id).innerHTML = newVal;
             }
         }
         // update the FPS info
@@ -83,11 +95,19 @@ export const uiTools = {
         function updateSelectedBlock() {
             // check if there is a selected block
             if (uiTools.selectedBlock !== null) {
-                checkIfElementNeedsUpdate('block-x-info', uiTools.selectedBlock.x);
-                checkIfElementNeedsUpdate('block-y-info', uiTools.selectedBlock.y);
-                checkIfElementNeedsUpdate('block-color-info', uiTools.selectedBlock.color);
-                checkIfElementNeedsUpdate('block-brain-info', JSON.stringify(uiTools.selectedBlock.brain));
-                console.log(uiTools.selectedBlock.brain);
+                checkIfElementNeedsUpdate(
+                    'block-x-info',
+                    uiTools.selectedBlock.x
+                );
+                checkIfElementNeedsUpdate(
+                    'block-y-info',
+                    uiTools.selectedBlock.y
+                );
+                checkIfElementNeedsUpdate(
+                    'block-color-info',
+                    uiTools.selectedBlock.color
+                );
+                uiTools.createBrainInfoPanelElements(uiTools.selectedBlock.brain.connections);
             }
         }
         updateSelectedBlock();
@@ -97,7 +117,9 @@ export const uiTools = {
     debounce: (label, func, wait) => {
         const now = Date.now();
         // find object in array with the same label
-        const index = uiTools.debounceArr.findIndex((obj) => obj.label === label);
+        const index = uiTools.debounceArr.findIndex(
+            (obj) => obj.label === label
+        );
         // if the object exists
         if (index !== -1) {
             // find the elsapsed time
@@ -119,4 +141,4 @@ export const uiTools = {
             func();
         }
     },
-}
+};

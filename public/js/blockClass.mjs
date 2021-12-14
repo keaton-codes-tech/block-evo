@@ -1,12 +1,13 @@
 import { NeuralNetwork } from "./neuralNetworkClass.mjs";
 import { canvasTools } from "./canvasTools.mjs";
+import { neuralNetworkTools } from "./neuralNetworkTools.mjs";
 
 export class Block {
-    constructor(x, y, color, numInputs, numHiddens, numOutputs) {
+    constructor(x, y, numInputs, numHiddens, numOutputs) {
         this.x = x;
         this.y = y;
-        this.color = color;
         this.brain = new NeuralNetwork(numInputs, numHiddens, numOutputs);
+        this.color = neuralNetworkTools.generateColorFromGenome(this.brain);
     }
     paint(ctx) {
         ctx.fillStyle = this.color;

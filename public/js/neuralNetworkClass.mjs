@@ -5,11 +5,8 @@ export class NeuralNetwork {
         this.input = neuralNetworkTools.getRandomInputs(numInputs);
         this.hidden = neuralNetworkTools.getHiddens(numHiddens);
         this.output = neuralNetworkTools.getRandomOutputs(numOutputs);
-        this.weights_ih = neuralNetworkTools.getRandomWeights(
+        this.connections = neuralNetworkTools.getRandomConnections(
             this.input,
-            this.hidden
-        );
-        this.weights_ho = neuralNetworkTools.getRandomWeights(
             this.hidden,
             this.output
         );

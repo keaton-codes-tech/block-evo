@@ -91,23 +91,21 @@ export const canvasTools = {
         const x = Math.floor((Math.random() * canvasTools.dimensions) / canvasTools.blockWidth);
         // get a random number between 0 and the number of rows
         const y = Math.floor((Math.random() * canvasTools.dimensions) / canvasTools.blockWidth);
-        // get a random colour
-        const color = canvasTools.getRandomColor();
         // add the block to the array
-        canvasTools.population.push(new Block(x, y, color, 4, 2, 2));
+        canvasTools.population.push(new Block(x, y, 4, 2, 2));
     },
 
     // create a function that returns a random colour
-    getRandomColor: () => {
-        // create a random number between 0 and 255
-        const r = Math.floor(Math.random() * 256);
-        // create a random number between 0 and 255
-        const g = Math.floor(Math.random() * 256);
-        // create a random number between 0 and 255
-        const b = Math.floor(Math.random() * 256);
-        // return the colour
-        return `rgb(${r}, ${g}, ${b})`;
-    },
+    // getRandomColor: () => {
+    //     // create a random number between 0 and 255
+    //     const r = Math.floor(Math.random() * 256);
+    //     // create a random number between 0 and 255
+    //     const g = Math.floor(Math.random() * 256);
+    //     // create a random number between 0 and 255
+    //     const b = Math.floor(Math.random() * 256);
+    //     // return the colour
+    //     return `rgb(${r}, ${g}, ${b})`;
+    // },
 
     setRandomBlocks: (ctx, numblocks) => {
         // loop through the number of blocks
@@ -123,7 +121,7 @@ export const canvasTools = {
     },
 
     loop: (ctx, prevTime = 0) => {
-        uiTools.debounce('blockActions', canvasTools.processBlockActions, canvasTools.stepRatePerSecond);
+        //uiTools.debounce('blockActions', canvasTools.processBlockActions, canvasTools.stepRatePerSecond);
         const now = Date.now();
         canvasTools.draw(ctx);
         uiTools.FPS = Math.round(1000 / (Date.now() - prevTime));

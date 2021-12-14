@@ -117,7 +117,7 @@ const init = () => {
         const infoPanel = document.createElement('div');
         infoPanel.id = 'block-info-panel';
         infoPanel.className = 'panel';
-        
+
         const blockX = uiTools.createInfoPanelElement({
             id: 'block-x-info',
             label: 'X',
@@ -139,17 +139,21 @@ const init = () => {
         });
         infoPanel.appendChild(blockColor);
 
-        const blockBrain = uiTools.createInfoPanelElement({
-            id: 'block-brain-info',
-            label: 'Brain',
-            value: '',
-        });
-        infoPanel.appendChild(blockBrain);
-
         // insert the info panel into the DOM
         uiContainer.appendChild(infoPanel);
     }
     initBlockInfoPanel();
+
+    function initBrainInfoPanel() {
+        // create an info panel container
+        const infoPanel = document.createElement('div');
+        infoPanel.id = 'brain-info-panel';
+        infoPanel.className = 'panel';
+
+        // insert the info panel into the DOM
+        uiContainer.appendChild(infoPanel);
+    }
+    initBrainInfoPanel()
 
     function initMouseListener() {
         // listen for mouse events
