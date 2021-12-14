@@ -41,10 +41,10 @@ export const canvasTools = {
         canvasTools.clearCanvas(ctx);
 
         // draw the objects
+        uiTools.updateInfo();
         canvasTools.drawGrid(ctx, canvasTools.dimensions, canvasTools.blockWidth);
         canvasTools.drawBlocks(ctx);
         canvasTools.drawMouse(ctx);
-        uiTools.updateInfo();
     },
 
     // create a function that paints a block with a colour
@@ -67,7 +67,7 @@ export const canvasTools = {
 
     // draw the mouse
     drawMouse: (ctx) => {
-        if (uiTools.mouse.x >= 0 && uiTools.mouse.y >= 0) {
+        if (uiTools.mouse.x != null && uiTools.mouse.y != null) {
             const opacity = 0.3;
             canvasTools.paintBlock(ctx, uiTools.mouse.x, uiTools.mouse.y, `rgba(0, 0, 0, ${opacity})`);
             const selectedBlock = canvasTools.population.filter((block) => {

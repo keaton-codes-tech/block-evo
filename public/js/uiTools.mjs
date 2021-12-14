@@ -80,9 +80,12 @@ export const uiTools = {
     // update the info panel
     updateInfo: () => {
         function checkIfElementNeedsUpdate(id, newVal) {
-            let prev = document.querySelector('#' + id).innerHTML;
-            if (prev != newVal) {
-                document.querySelector('#' + id).innerHTML = newVal;
+            let prev = document.querySelector('#' + id).innerText;
+            if (typeof newVal === 'number') {
+                newVal = newVal.toString();
+            }
+            if (prev !== newVal) {
+                document.querySelector('#' + id).innerText = newVal;
             }
         }
         // update the FPS info

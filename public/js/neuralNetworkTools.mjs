@@ -484,12 +484,17 @@ export const neuralNetworkTools = {
             // weight.toString(2).substring(0, 8);
             
             function generateBlueColorChannel(weight) {
-                weight = Math.abs(weight);
-                let binaryChannel = weight.toString(2).substring(2, 10).padStart(8, '0');
-                //console.log(`BlueBinary: ${binaryChannel}`);
-                let base10Channel = parseInt(binaryChannel, 2);
-                //console.log(`BlueBase10: ${base10Channel}`);
-                globalBlue += base10Channel;
+                if (weight >= 0){
+                    let binaryChannel = weight.toString(2).substring(2, 10).padStart(8, '0');
+                    let base10Channel = parseInt(binaryChannel, 2);
+                    globalBlue += base10Channel;
+                } else {
+                    weight = Math.abs(weight);
+                    let binaryChannel = weight.toString(2).substring(2, 10).padStart(8, '0');
+                    let base10Channel = parseInt(binaryChannel, 2);
+                    globalBlue += (255 - base10Channel);
+                }
+
             }
             generateBlueColorChannel(connection.weight);
 
@@ -497,9 +502,9 @@ export const neuralNetworkTools = {
             // Do this for each gene and then add the channels together then divide by the number of genes to get a final colour
         });
 
-        let finalRed = Math.floor(globalRed / connections.length);
-        let finalGreen = Math.floor(globalGreen / connections.length);
-        let finalBlue = Math.floor(globalBlue / connections.length);
+        let finalRed = Math.round(globalRed / connections.length);
+        let finalGreen = Math.round(globalGreen / connections.length);
+        let finalBlue = Math.round(globalBlue / connections.length);
         let finalColor = `rgb(${finalRed}, ${finalGreen}, ${finalBlue})`;
 
         return finalColor;
