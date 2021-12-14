@@ -492,7 +492,7 @@ export const neuralNetworkTools = {
                     weight = Math.abs(weight);
                     let binaryChannel = weight.toString(2).substring(2, 10).padStart(8, '0');
                     let base10Channel = parseInt(binaryChannel, 2);
-                    globalBlue += (255 - base10Channel);
+                    globalBlue += Math.round(base10Channel/2);
                 }
 
             }
