@@ -225,6 +225,7 @@ export const neuralNetworkTools = {
             type: 'Pheromone',
             typeID: '3',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Emit pheromone, increase pheromone density by 0.5 on current grid position
         {
@@ -232,6 +233,7 @@ export const neuralNetworkTools = {
             type: 'Internal',
             typeID: '5',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Set oscillator period - increase or decrease the default period
         {
@@ -239,6 +241,7 @@ export const neuralNetworkTools = {
             type: 'Internal',
             typeID: '6',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Set responsiveness, increase or decrease the default responsiveness, lowers or raises the threshold probability of all input and output neurons firing
         {
@@ -246,6 +249,7 @@ export const neuralNetworkTools = {
             type: 'Environement',
             typeID: '8',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Move forward (last direction of movement = forward)
         {
@@ -253,6 +257,7 @@ export const neuralNetworkTools = {
             type: 'Environement',
             typeID: '9',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Move random
         {
@@ -260,6 +265,7 @@ export const neuralNetworkTools = {
             type: 'Environement',
             typeID: '10',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Move reverse
         {
@@ -267,6 +273,7 @@ export const neuralNetworkTools = {
             type: 'Environement',
             typeID: '11',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Move left-right (+/-)
         {
@@ -274,6 +281,7 @@ export const neuralNetworkTools = {
             type: 'Environement',
             typeID: '12',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Move east-west (+/-)
         {
@@ -281,6 +289,7 @@ export const neuralNetworkTools = {
             type: 'Environement',
             typeID: '13',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Move north-south (+/-)
         {
@@ -288,6 +297,7 @@ export const neuralNetworkTools = {
             type: 'Social',
             typeID: '5',
             layer: 'Output',
+            receivedValues: [],
             action: () => {},
         }, // Kill forward neighbour
     ],
@@ -310,6 +320,7 @@ export const neuralNetworkTools = {
                 type: 'Hidden',
                 layer: 'Hidden',
                 typeID: i,
+                receivedValues: [],
             });
         }
         return hiddens;
@@ -437,7 +448,7 @@ export const neuralNetworkTools = {
                     }
                 }
                 //console.log('Bit 1:', binaryChannel, 'channel:', channel);
-                
+
                 // Bit 2-4 = Source/Sink Type (allows for 7 different types)
                 if (obj.type === 'Pheromone') {
                     binaryChannel += '000';
@@ -453,7 +464,9 @@ export const neuralNetworkTools = {
                 //console.log('Bits 1-4:', binaryChannel, 'channel:', channel);
 
                 // Bit 5-8 = Source/Sink TypeID (4 bits allows for 15 different IDs per type)
-                binaryChannel += parseInt(obj.typeID).toString(2).padStart(4, '0');
+                binaryChannel += parseInt(obj.typeID)
+                    .toString(2)
+                    .padStart(4, '0');
                 //console.log('Bits 1-8:', binaryChannel, 'channel:', channel);
                 let base10Channel = parseInt(binaryChannel, 2);
                 if (channel === 'red') {
@@ -470,21 +483,26 @@ export const neuralNetworkTools = {
 
             // Blue channel
             // Bit 1-8 = Weight (floating point weight is rounded off to 8 bits)
-            
+
             function generateBlueColorChannel(weight) {
-                if (weight >= 0){
-                    let binaryChannel = weight.toString(2).substring(2, 10).padStart(8, '0');
+                if (weight >= 0) {
+                    let binaryChannel = weight
+                        .toString(2)
+                        .substring(2, 10)
+                        .padStart(8, '0');
                     let base10Channel = parseInt(binaryChannel, 2);
                     globalBlue += base10Channel;
                 } else {
                     weight = Math.abs(weight);
-                    let binaryChannel = weight.toString(2).substring(2, 10).padStart(8, '0');
+                    let binaryChannel = weight
+                        .toString(2)
+                        .substring(2, 10)
+                        .padStart(8, '0');
                     let base10Channel = parseInt(binaryChannel, 2);
-                    globalBlue += Math.round(base10Channel/2);
+                    globalBlue += Math.round(base10Channel / 2);
                 }
-
             }
-            generateBlueColorChannel(connection.weight);    
+            generateBlueColorChannel(connection.weight);
         });
         // Do this for each gene and then add the channels together then divide by the number of genes to get a final colour
         let finalRed = Math.round(globalRed / connections.length);
@@ -494,19 +512,24 @@ export const neuralNetworkTools = {
 
         return finalColor;
     },
-    sigmoid(x) {
-        return 1 / (1 + Math.exp(-x));
-    },
-    sigmoidDerivative(x) {
-        return x * (1 - x);
-    },
     getRandomNumberBetweenRange(min, max) {
         return Math.random() * (max - min) + min;
+    },
+    sumValues(array) {
+        let sum = 0;
+        array.forEach((value) => {
+            sum += value;
+        });
+        return sum;
+    },
+    probability(n) {
+        return Math.random() < n;
     },
     mutateWeights(weights, mutationRate) {
         for (let first in weights) {
             for (let second in weights[first]) {
                 if (Math.random() < mutationRate) {
+                    // Mutation occurs
                     weights[first][second] = this.getRandomNumberBetweenRange(
                         -1,
                         1

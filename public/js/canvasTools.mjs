@@ -8,7 +8,7 @@ export const canvasTools = {
     lineWidth: 1,
     blockWidth: 30,
     dimensions: 300,
-    stepRatePerSecond: 1 * 1000,
+    stepRatePerSecond: 3 * 1000,
     // create a function that draws a grid of blocks
     drawGrid: (ctx, dimensions, blockWidth) => {
         // set the stroke color
@@ -116,12 +116,12 @@ export const canvasTools = {
 
     processBlockActions: () => {
         canvasTools.population.forEach((block) => {
-            block.brain.processActions();
+            block.brain.processStep();
         });
     },
 
     loop: (ctx, prevTime = 0) => {
-        //uiTools.debounce('blockActions', canvasTools.processBlockActions, canvasTools.stepRatePerSecond);
+        uiTools.debounce('blockActions', canvasTools.processBlockActions, canvasTools.stepRatePerSecond);
         const now = Date.now();
         canvasTools.draw(ctx);
         uiTools.FPS = Math.round(1000 / (Date.now() - prevTime));

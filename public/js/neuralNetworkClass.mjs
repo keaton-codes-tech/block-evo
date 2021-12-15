@@ -2,48 +2,80 @@ import { neuralNetworkTools } from './neuralNetworkTools.mjs';
 
 export class NeuralNetwork {
     constructor(numInputs, numHiddens, numOutputs) {
-        this.input = neuralNetworkTools.getRandomInputs(numInputs);
-        this.hidden = neuralNetworkTools.getHiddens(numHiddens);
-        this.output = neuralNetworkTools.getRandomOutputs(numOutputs);
+        this.inputs = neuralNetworkTools.getRandomInputs(numInputs);
+        this.hiddens = neuralNetworkTools.getHiddens(numHiddens);
+        this.outputs = neuralNetworkTools.getRandomOutputs(numOutputs);
         this.connections = neuralNetworkTools.getRandomConnections(
-            this.input,
-            this.hidden,
-            this.output
+            this.inputs,
+            this.hiddens,
+            this.outputs
         );
+        this.responsiveness = 0.5;
+        this.oscillationInterval = 25;
     }
-    processActions() {
-        // feed forward
-        // inputs produce a number between 0 and 1
-        // inputs multiply their value with their weights and send the result to the hidden layer
-        // hidden layer produces a number between -1 and 1 with tanh(sum(inputs))
-        // outputs produce a number between -1 and 1 with tanh(sum(hidden))
-        // outputs final values are the probabilities of the actions being taken negative or positive
-        // this must happen each step and becomes the behaviour of the agent
+    feedForward() {
+        // input neurons produce a number between 0 and 1
+        // input neurons multiply their value with their weights and send the result to the sink
 
-        function probability(n) {
-            return Math.random() < n;
-        }
-        for (const inputNeuronLabel in this.weights_ih) {
-            for (const hiddenNeuronLabel in this.weights_ih[inputNeuronLabel]) {
-                if (
-                    probability(
-                        Math.abs(
-                            this.weights_ih[inputNeuronLabel][hiddenNeuronLabel]
-                        )
-                    )
-                ) {
-                    const thisInput = this.input.filter(
-                        (entry) => entry.name === inputNeuronLabel
-                    );
-                    thisInput[0].action({
-                        target: hiddenNeuronLabel,
-                        value: this.weights_ih[inputNeuronLabel][
-                            hiddenNeuronLabel
-                        ],
-                    });
-                }
+        // hidden layer neurons produce a number between -1 and 1
+        // they sum up all their inputs and squish it to this range with tanh(sum(inputs))
+
+        // output neurons produce a number between -1 and 1
+        // they sum up all their inputs and squish it to this range with tanh(sum(inputs))
+        // outputs final values are the probabilities of the actions being taken negative or positive
+        // some outputs will only fire if their value is positive
+
+        for (let index = 0; index < this.connections.length; index++) {
+            const connection = this.connections[index];
+            // if the source is an input neuron, multiply the input value with the weight
+            if (connection.source.type === 'input') {
+                // The value that is sent should be preferably between -4 and 4
+                connection.sink.receivedValues.push(
+                    connection.source.value * connection.weight
+                );
             }
         }
+
+        for (let index = 0; index < this.connections.length; index++) {
+            const connection = this.connections[index];
+            // if the source is a hidden neuron, sum all the received values and squish it with tanh
+            // then send the result to the sink
+            if (connection.source.type === 'hidden') {
+                connection.source.value = Math.tanh(neuralNetworkTools.sumValues(connection.source.receivedValues));
+                connection.sink.receivedValues.push(
+                    connection.source.value * connection.weight
+                );
+            }
+        }
+
+        // iterate through the output neurons, sum all the received values and squish it with tanh
+        for (let index = 0; index < this.outputs.length; index++) {
+            const output = this.outputs[index];
+            output.value = Math.tanh(neuralNetworkTools.sumValues(output.receivedValues));
+        }
+
+
+    }
+    processInputActions() {
+        // Process Input actions
+        // Inputs fire every step regardless of weights
+        for (let index = 0; index < this.inputs.length; index++) {
+            const input = this.inputs[index];
+            input.value = input.action();
+        }
+    }
+    processOutputActions() {
+        // Process Output actions
+        // Outputs fire depending on their value
+        for (let index = 0; index < this.outputs.length; index++) {
+            const output = this.outputs[index];
+            output.action(output.value);
+        }
+    }
+    processStep() {
+        this.processInputActions();
+        this.feedForward();
+        this.processOutputActions();
     }
     evolveGenome() {
         // mutate the weights

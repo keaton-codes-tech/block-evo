@@ -8,6 +8,7 @@ export class Block {
         this.y = y;
         this.brain = new NeuralNetwork(numInputs, numHiddens, numOutputs);
         this.color = neuralNetworkTools.generateColorFromGenome(this.brain.connections);
+        console.log(this.brain);
     }
     paint(ctx) {
         ctx.fillStyle = this.color;
