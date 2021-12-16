@@ -10,6 +10,7 @@ export const canvasTools = {
     blockWidth: 30,
     dimensions: 300,
     stepRatePerSecond: 3 * 1000,
+    pheromoneDecayRate: 1.3, // 30% decay per tick
 
     drawGrid: (ctx, dimensions, blockWidth) => {
 
@@ -114,16 +115,17 @@ export const canvasTools = {
     },
 
     updateGrid: () => {
-        // Create two dimensional array
+        // Remove occupants from grid and degrade pheromone
         for (let i = 0; i < canvasTools.dimensions / canvasTools.blockWidth; i++) {
             for (let j = 0; j < canvasTools.dimensions / canvasTools.blockWidth; j++) {
                 canvasTools.grid[i][j].occupant = null;
-                canvasTools.grid[i][j].pheromone /= 1.3; // decay pheromone by 30%
+                canvasTools.grid[i][j].pheromone = (canvasTools.grid[i][j].pheromone / canvasTools.pheromoneDecayRate).toFixed(2);
             }
         }
     },
 
     populateGrid: () => {
+        // Add occupants to grid
         canvasTools.population.forEach((block) => {
             canvasTools.grid[block.x][block.y].occupant = block;
         });
