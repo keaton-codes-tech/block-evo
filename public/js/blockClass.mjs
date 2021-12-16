@@ -8,6 +8,7 @@ export class Block {
         this.y = y;
         this.brain = new NeuralNetwork(numInputs, numHiddens, numOutputs);
         this.color = neuralNetworkTools.generateColorFromGenome(this.brain.connections);
+        this.direction = neuralNetworkTools.getRandomDirection();
         console.log(this.brain);
     }
     paint(ctx) {
@@ -18,5 +19,10 @@ export class Block {
             canvasTools.blockWidth - canvasTools.lineWidth * 2,
             canvasTools.blockWidth - canvasTools.lineWidth * 2
         );
+    }
+    processStep() {
+        this.brain.processInputActions(this);
+        this.brain.feedForward();
+        this.brain.processOutputActions(this);
     }
 }

@@ -39,9 +39,14 @@ export class NeuralNetwork {
         for (let index = 0; index < this.connections.length; index++) {
             const connection = this.connections[index];
             // if the source is a hidden neuron, sum all the received values and squish it with tanh
-            // then send the result to the sink
             if (connection.source.type === 'hidden') {
                 connection.source.value = Math.tanh(neuralNetworkTools.sumValues(connection.source.receivedValues));
+            }
+        }
+        for (let index = 0; index < this.connections.length; index++) {
+            const connection = this.connections[index];
+            // then send the result to the sink
+            if (connection.source.type === 'hidden') {
                 connection.sink.receivedValues.push(
                     connection.source.value * connection.weight
                 );
@@ -56,26 +61,21 @@ export class NeuralNetwork {
 
 
     }
-    processInputActions() {
+    processInputActions(block) {
         // Process Input actions
         // Inputs fire every step regardless of weights
         for (let index = 0; index < this.inputs.length; index++) {
             const input = this.inputs[index];
-            input.value = input.action();
+            input.value = input.action(block);
         }
     }
-    processOutputActions() {
+    processOutputActions(block) {
         // Process Output actions
         // Outputs fire depending on their value
         for (let index = 0; index < this.outputs.length; index++) {
             const output = this.outputs[index];
-            output.action(output.value);
+            output.action(block);
         }
-    }
-    processStep() {
-        this.processInputActions();
-        this.feedForward();
-        this.processOutputActions();
     }
     evolveGenome() {
         // mutate the weights

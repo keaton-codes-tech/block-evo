@@ -8,7 +8,9 @@ export const possibleOutputs = [
         typeID: '3',
         layer: 'Output',
         receivedValues: [],
-        action: () => {},
+        action: (block) => {
+            console.log(block)
+        },
     }, // Emit pheromone, increase pheromone density by 0.5 on current grid position
     {
         name: 'OSC',

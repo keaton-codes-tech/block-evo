@@ -139,6 +139,13 @@ const init = () => {
         });
         infoPanel.appendChild(blockColor);
 
+        const blockDirection = uiTools.createInfoPanelElement({
+            id: 'block-direction-info',
+            label: 'Facing',
+            value: '',
+        });
+        infoPanel.appendChild(blockDirection);
+
         // insert the info panel into the DOM
         uiContainer.appendChild(infoPanel);
     }
@@ -172,6 +179,8 @@ const init = () => {
     initMouseListener();
 
     canvasTools.setRandomBlocks(ctx, 1);
+    canvasTools.createGrid();
+    canvasTools.populateGrid();
 
     // Begin the animation
     canvasTools.loop(ctx);

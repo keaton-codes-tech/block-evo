@@ -110,6 +110,10 @@ export const uiTools = {
                     'block-color-info',
                     uiTools.selectedBlock.color
                 );
+                checkIfElementNeedsUpdate(
+                    'block-direction-info',
+                    uiTools.selectedBlock.direction
+                );
                 uiTools.createBrainInfoPanelElements(uiTools.selectedBlock.brain.connections);
             }
         }

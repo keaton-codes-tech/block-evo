@@ -215,6 +215,20 @@ export const neuralNetworkTools = {
 
         return finalColor;
     },
+    getRandomDirection() {
+        // random number between 0 and 3
+        let direction = Math.floor(Math.random() * 4);
+        console.log('direction:', direction);
+        if (direction === 0) {
+            return 'North';
+        } else if (direction === 1) {
+            return 'East';
+        } else if (direction === 2) {
+            return 'South';
+        } else if (direction === 3) {
+            return 'West';
+        }
+    },
     getRandomNumberBetweenRange(min, max) {
         return Math.random() * (max - min) + min;
     },
