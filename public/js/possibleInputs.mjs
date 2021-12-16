@@ -7,9 +7,8 @@ export const possibleInputs = [
         type: 'Pheromone',
         layer: 'Input',
         typeID: '0',
-        action: (target, value) => {
+        action: (block, grid) => {
             // Depends on this blocks grid position and the two blocks left and right of it
-
             // Look at blocks left and right to detect if there is a pheromone gradient between 0 and 1
             // If there is a gradient, multiply the gradient value by the weight and send it to the target neuron
 

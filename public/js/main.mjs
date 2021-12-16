@@ -14,8 +14,8 @@ const init = () => {
         const ctx = canvas.getContext('2d');
 
         // set canvas size
-        ctx.canvas.width = canvasTools.dimensions;
-        ctx.canvas.height = canvasTools.dimensions;
+        ctx.canvas.width = canvasTools.dimensions * canvasTools.blockWidth;
+        ctx.canvas.height = canvasTools.dimensions * canvasTools.blockWidth;
 
         // insert the canvas into the DOM
         document.body.appendChild(canvas);
@@ -37,6 +37,17 @@ const init = () => {
     const uiContainer = initUIContainer();
 
     function initControlPanel() {
+        function resizeCanvas() {
+            ctx.canvas.width = canvasTools.dimensions * canvasTools.blockWidth;
+            ctx.canvas.height = canvasTools.dimensions * canvasTools.blockWidth;
+            resetCanvas();
+        }
+        function resetCanvas() {
+            canvasTools.population.length = 0;
+            canvasTools.setRandomBlocks(ctx, 5);
+            canvasTools.createGrid();
+            canvasTools.populateGrid();
+        }
         // create a control panel container
         const controlPanel = document.createElement('div');
         controlPanel.id = 'control-panel';
@@ -47,18 +58,16 @@ const init = () => {
             id: 'dimensions',
             label: 'Dimensions',
             type: 'number',
-            value: '300',
-            min: '10',
-            max: '1000',
-            step: '10',
+            value: '30',
+            min: '8',
+            max: '128',
+            step: '1',
         });
         controlPanel.appendChild(dimensionsInput);
         // listen for changes to the dimensions input
         dimensionsInput.addEventListener('change', (e) => {
             canvasTools.dimensions = e.target.value;
-            // resize the canvas
-            ctx.canvas.width = canvasTools.dimensions;
-            ctx.canvas.height = canvasTools.dimensions;
+            resizeCanvas();
         });
 
         // create a block width input control
@@ -66,7 +75,7 @@ const init = () => {
             id: 'block-width',
             label: 'Block Width',
             type: 'number',
-            value: '30',
+            value: '20',
             min: '10',
             max: '100',
             step: '1',
@@ -74,6 +83,7 @@ const init = () => {
         controlPanel.appendChild(blockWidthInput);
         blockWidthInput.addEventListener('change', (e) => {
             canvasTools.blockWidth = e.target.value;
+            resizeCanvas();
         });
 
         // create a reset button
@@ -85,8 +95,7 @@ const init = () => {
         });
         controlPanel.appendChild(resetButton);
         resetButton.addEventListener('click', () => {
-            canvasTools.population.length = 0;
-            canvasTools.setRandomBlocks(ctx, 5);
+            resetCanvas();
         });
 
         // insert the controls container into the DOM

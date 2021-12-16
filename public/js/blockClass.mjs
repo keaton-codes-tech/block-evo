@@ -19,9 +19,9 @@ export class Block {
             canvasTools.blockWidth - canvasTools.lineWidth * 2
         );
     }
-    processStep() {
-        this.brain.processInputActions(this);
+    processStep(grid) {
+        this.brain.processInputActions(this, grid);
         this.brain.feedForward();
-        this.brain.processOutputActions(this);
+        this.brain.processOutputActions(this, grid);
     }
 }

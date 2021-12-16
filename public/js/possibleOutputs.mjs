@@ -8,8 +8,9 @@ export const possibleOutputs = [
         typeID: '3',
         layer: 'Output',
         receivedValues: [],
-        action: (block) => {
-            console.log(block)
+        action: ({block, grid}) => {
+            console.log('block', block, 'grid', grid);
+            grid[block.x][block.y].pheromone = 1;
         },
     }, // Emit pheromone, increase pheromone density by 0.5 on current grid position
     {
@@ -18,7 +19,13 @@ export const possibleOutputs = [
         typeID: '5',
         layer: 'Output',
         receivedValues: [],
-        action: () => {},
+        action: ({block, value}) => {
+            if (value > 0) {
+                block.oscillator *= value + 1;
+            } else {
+                block.oscillator /= Math.abs(value) + 1;
+            }
+        },
     }, // Set oscillator period - increase or decrease the default period
     {
         name: 'Res',
@@ -26,7 +33,20 @@ export const possibleOutputs = [
         typeID: '6',
         layer: 'Output',
         receivedValues: [],
-        action: () => {},
+        action: ({block, value}) => {
+            let newVal;
+            if (value > 0) {
+                newVal = block.responsiveness += 0.1;
+            } else {
+                newVal = block.responsiveness -= 0.1;
+            }
+            if (newVal < 0) {
+                newVal = 0;
+            } else if (newVal > 1) {
+                newVal = 1;
+            }
+            block.responsiveness = newVal;
+        },
     }, // Set responsiveness, increase or decrease the default responsiveness, lowers or raises the threshold probability of all input and output neurons firing
     {
         name: 'Mfd',

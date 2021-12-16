@@ -7,8 +7,8 @@ export const canvasTools = {
     population: [],
     grid: [],
     lineWidth: 1,
-    blockWidth: 30,
-    dimensions: 300,
+    blockWidth: 20,
+    dimensions: 30,
     stepRatePerSecond: 3 * 1000,
     pheromoneDecayRate: 1.3, // 30% decay per tick
 
@@ -18,9 +18,9 @@ export const canvasTools = {
         ctx.lineWidth = canvasTools.lineWidth;
 
         // loop through the number of rows
-        for (let i = 0; i < dimensions / blockWidth; i++) {
+        for (let i = 0; i < dimensions; i++) {
             // loop through the number of columns
-            for (let j = 0; j < dimensions / blockWidth; j++) {
+            for (let j = 0; j < dimensions; j++) {
                 // draw a square
                 ctx.strokeRect(
                     i * blockWidth,
@@ -49,10 +49,10 @@ export const canvasTools = {
     paintBlock: (ctx, x, y, color) => {
         ctx.fillStyle = color;
         ctx.fillRect(
-            x * canvasTools.blockWidth + 1,
-            y * canvasTools.blockWidth + 1,
-            canvasTools.blockWidth - 2,
-            canvasTools.blockWidth - 2
+            x * canvasTools.blockWidth + canvasTools.lineWidth,
+            y * canvasTools.blockWidth + canvasTools.lineWidth,
+            canvasTools.blockWidth - canvasTools.lineWidth*2,
+            canvasTools.blockWidth - canvasTools.lineWidth*2
         );
     },
 
@@ -84,9 +84,9 @@ export const canvasTools = {
     // create a function that paints random blocks
     setRandomBlock: () => {
         // get a random number between 0 and the number of columns
-        const x = Math.floor((Math.random() * canvasTools.dimensions) / canvasTools.blockWidth);
+        const x = Math.floor(Math.random() * canvasTools.dimensions);
         // get a random number between 0 and the number of rows
-        const y = Math.floor((Math.random() * canvasTools.dimensions) / canvasTools.blockWidth);
+        const y = Math.floor(Math.random() * canvasTools.dimensions);
         canvasTools.population.push(new Block(x, y, 4, 2, 2));
     },
 
@@ -98,7 +98,7 @@ export const canvasTools = {
 
     processBlockActions: () => {
         canvasTools.population.forEach((block) => {
-            block.processStep();
+            block.processStep(canvasTools.grid);
         });
         canvasTools.updateGrid();
         canvasTools.populateGrid();
@@ -106,9 +106,9 @@ export const canvasTools = {
 
     createGrid: () => {
         // Create two dimensional array
-        for (let i = 0; i < canvasTools.dimensions / canvasTools.blockWidth; i++) {
+        for (let i = 0; i < canvasTools.dimensions; i++) {
             canvasTools.grid[i] = [];
-            for (let j = 0; j < canvasTools.dimensions / canvasTools.blockWidth; j++) {
+            for (let j = 0; j < canvasTools.dimensions; j++) {
                 canvasTools.grid[i][j] = {pheromone: 0, occupant: null};
             }
         }
@@ -116,8 +116,8 @@ export const canvasTools = {
 
     updateGrid: () => {
         // Remove occupants from grid and degrade pheromone
-        for (let i = 0; i < canvasTools.dimensions / canvasTools.blockWidth; i++) {
-            for (let j = 0; j < canvasTools.dimensions / canvasTools.blockWidth; j++) {
+        for (let i = 0; i < canvasTools.dimensions; i++) {
+            for (let j = 0; j < canvasTools.dimensions; j++) {
                 canvasTools.grid[i][j].occupant = null;
                 canvasTools.grid[i][j].pheromone = (canvasTools.grid[i][j].pheromone / canvasTools.pheromoneDecayRate).toFixed(2);
             }

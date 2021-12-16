@@ -218,7 +218,6 @@ export const neuralNetworkTools = {
     getRandomDirection() {
         // random number between 0 and 3
         let direction = Math.floor(Math.random() * 4);
-        console.log('direction:', direction);
         if (direction === 0) {
             return 'North';
         } else if (direction === 1) {

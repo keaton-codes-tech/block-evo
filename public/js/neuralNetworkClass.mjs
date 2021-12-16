@@ -61,20 +61,20 @@ export class NeuralNetwork {
 
 
     }
-    processInputActions(block) {
+    processInputActions(block, grid) {
         // Process Input actions
         // Inputs fire every step regardless of weights
         for (let index = 0; index < this.inputs.length; index++) {
             const input = this.inputs[index];
-            input.value = input.action(block);
+            input.value = input.action({block, grid});
         }
     }
-    processOutputActions(block) {
+    processOutputActions(block, grid) {
         // Process Output actions
         // Outputs fire depending on their value
         for (let index = 0; index < this.outputs.length; index++) {
             const output = this.outputs[index];
-            output.action(block);
+            output.action({block, grid, value: output.value});
         }
     }
     evolveGenome() {
