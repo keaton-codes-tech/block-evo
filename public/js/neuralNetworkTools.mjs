@@ -50,18 +50,18 @@ export const neuralNetworkTools = {
                 connections.push({
                     source: inputs[i],
                     sink: hiddens[index],
-                    weight: neuralNetworkTools.getRandomNumberBetweenRange(
-                        0,
-                        1
+                    weight: neuralNetworkTools.getRandomFloatBetweenRange(
+                        -4,
+                        4
                     ),
                 });
             } else {
                 connections.push({
                     source: inputs[i],
                     sink: outputs[index - hiddens.length],
-                    weight: neuralNetworkTools.getRandomNumberBetweenRange(
-                        0,
-                        1
+                    weight: neuralNetworkTools.getRandomFloatBetweenRange(
+                        -4,
+                        4
                     ),
                 });
             }
@@ -76,26 +76,25 @@ export const neuralNetworkTools = {
                     connections.push({
                         source: hiddens[i],
                         sink: hiddens[index],
-                        weight: neuralNetworkTools.getRandomNumberBetweenRange(
-                            -1,
-                            1
+                        weight: neuralNetworkTools.getRandomFloatBetweenRange(
+                            -4,
+                            4
                         ),
                     });
                 } else {
                     connections.push({
                         source: hiddens[i],
                         sink: outputs[index - hiddens.length],
-                        weight: neuralNetworkTools.getRandomNumberBetweenRange(
-                            -1,
-                            1
+                        weight: neuralNetworkTools.getRandomFloatBetweenRange(
+                            -4,
+                            4
                         ),
                     });
                 }
             }
             processIndex();
 
-            if (JSON.stringify(hiddens[i]) === JSON.stringify(hiddens[index])) {
-                // TODO: I dont think we need to stringify here for equality check
+            if (i === index) {
                 // it connected to its self, make a second connection thats not to its self
                 let selfIndex = index;
                 function getNewIndex() {
@@ -278,7 +277,7 @@ export const neuralNetworkTools = {
             return 'West';
         }
     },
-    getRandomNumberBetweenRange(min, max) {
+    getRandomFloatBetweenRange(min, max) {
         return Math.random() * (max - min) + min;
     },
     sumValues(array) {
@@ -293,7 +292,7 @@ export const neuralNetworkTools = {
             for (let second in weights[first]) {
                 if (Math.random() < mutationRate) {
                     // Mutation occurs
-                    weights[first][second] = this.getRandomNumberBetweenRange(
+                    weights[first][second] = this.getRandomFloatBetweenRange(
                         -1,
                         1
                     );
