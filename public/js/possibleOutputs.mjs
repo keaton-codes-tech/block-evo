@@ -8,9 +8,14 @@ export const possibleOutputs = [
         typeID: '3',
         layer: 'Output',
         receivedValues: [],
-        action: ({block, grid}) => {
-            console.log('block', block, 'grid', grid);
-            grid[block.x][block.y].pheromone = 1;
+        action: ({block, grid, value}) => {
+            console.log('SG before probability', value);
+            if (value > 0) {
+                if (probability(value)) {
+                    console.log('SG activated: ', block.x, block.y);
+                    grid[block.x][block.y].pheromone = 1;
+                }
+            }
         },
     }, // Emit pheromone, increase pheromone density by 0.5 on current grid position
     {
@@ -70,7 +75,9 @@ export const possibleOutputs = [
         typeID: '10',
         layer: 'Output',
         receivedValues: [],
-        action: () => {},
+        action: () => {
+
+        },
     }, // Move reverse
     {
         name: 'MRL',
@@ -105,3 +112,7 @@ export const possibleOutputs = [
         action: () => {},
     }, // Kill forward neighbour
 ];
+
+function probability(n) {
+    return Math.random() < n;
+}

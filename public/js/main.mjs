@@ -44,7 +44,7 @@ const init = () => {
         }
         function resetCanvas() {
             canvasTools.population.length = 0;
-            canvasTools.setRandomBlocks(ctx, 5);
+            canvasTools.setRandomBlocks(ctx, canvasTools.startingPopulation);
             canvasTools.createGrid();
             canvasTools.populateGrid();
         }
@@ -84,6 +84,22 @@ const init = () => {
         blockWidthInput.addEventListener('change', (e) => {
             canvasTools.blockWidth = e.target.value;
             resizeCanvas();
+        });
+
+        // create a number of starting population input control
+        const startingPopInput = uiTools.createControlPanelElement({
+            id: 'starting-population',
+            label: 'Starting Population',
+            type: 'number',
+            value: '1',
+            min: '1',
+            max: '50',
+            step: '1',
+        });
+        controlPanel.appendChild(startingPopInput);
+        startingPopInput.addEventListener('change', (e) => {
+            canvasTools.startingPopulation = e.target.value;
+            resetCanvas();
         });
 
         // create a reset button
@@ -187,7 +203,7 @@ const init = () => {
     }
     initMouseListener();
 
-    canvasTools.setRandomBlocks(ctx, 1);
+    canvasTools.setRandomBlocks(ctx, canvasTools.startingPopulation);
     canvasTools.createGrid();
     canvasTools.populateGrid();
 

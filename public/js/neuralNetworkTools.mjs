@@ -24,6 +24,7 @@ export const neuralNetworkTools = {
                 layer: 'Hidden',
                 typeID: i,
                 receivedValues: [],
+                value: 0,
             });
         }
         return hiddens;
@@ -237,9 +238,6 @@ export const neuralNetworkTools = {
             sum += value;
         });
         return sum;
-    },
-    probability(n) {
-        return Math.random() < n;
     },
     mutateWeights(weights, mutationRate) {
         for (let first in weights) {

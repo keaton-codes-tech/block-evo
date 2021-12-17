@@ -1,7 +1,7 @@
 'use strict';
 
-import { Block } from "./blockClass.mjs";
-import { uiTools } from "./uiTools.mjs";
+import { Block } from './blockClass.mjs';
+import { uiTools } from './uiTools.mjs';
 
 export const canvasTools = {
     population: [],
@@ -9,11 +9,11 @@ export const canvasTools = {
     lineWidth: 1,
     blockWidth: 20,
     dimensions: 30,
+    startingPopulation: 1,
     stepRatePerSecond: 3 * 1000,
     pheromoneDecayRate: 1.3, // 30% decay per tick
 
     drawGrid: (ctx, dimensions, blockWidth) => {
-
         ctx.strokeStyle = 'black';
         ctx.lineWidth = canvasTools.lineWidth;
 
@@ -41,7 +41,11 @@ export const canvasTools = {
 
         // draw the objects
         uiTools.updateInfo();
-        canvasTools.drawGrid(ctx, canvasTools.dimensions, canvasTools.blockWidth);
+        canvasTools.drawGrid(
+            ctx,
+            canvasTools.dimensions,
+            canvasTools.blockWidth
+        );
         canvasTools.drawBlocks(ctx);
         canvasTools.drawMouse(ctx);
     },
@@ -51,8 +55,8 @@ export const canvasTools = {
         ctx.fillRect(
             x * canvasTools.blockWidth + canvasTools.lineWidth,
             y * canvasTools.blockWidth + canvasTools.lineWidth,
-            canvasTools.blockWidth - canvasTools.lineWidth*2,
-            canvasTools.blockWidth - canvasTools.lineWidth*2
+            canvasTools.blockWidth - canvasTools.lineWidth * 2,
+            canvasTools.blockWidth - canvasTools.lineWidth * 2
         );
     },
 
@@ -65,16 +69,27 @@ export const canvasTools = {
     drawMouse: (ctx) => {
         if (uiTools.mouse.x != null && uiTools.mouse.y != null) {
             const opacity = 0.3;
-            canvasTools.paintBlock(ctx, uiTools.mouse.x, uiTools.mouse.y, `rgba(0, 0, 0, ${opacity})`);
+            canvasTools.paintBlock(
+                ctx,
+                uiTools.mouse.x,
+                uiTools.mouse.y,
+                `rgba(0, 0, 0, ${opacity})`
+            );
             const selectedBlock = canvasTools.population.filter((block) => {
-                if (uiTools.mouse.x === block.x && uiTools.mouse.y === block.y) {
+                if (
+                    uiTools.mouse.x === block.x &&
+                    uiTools.mouse.y === block.y
+                ) {
                     return block;
                 }
             });
             if (selectedBlock.length > 0) {
                 if (uiTools.selectedBlock === null) {
                     uiTools.selectedBlock = selectedBlock[0];
-                } else if (selectedBlock[0].x !== uiTools.selectedBlock.x || selectedBlock[0].y !== uiTools.selectedBlock.y) {
+                } else if (
+                    selectedBlock[0].x !== uiTools.selectedBlock.x ||
+                    selectedBlock[0].y !== uiTools.selectedBlock.y
+                ) {
                     uiTools.selectedBlock = selectedBlock[0];
                 }
             }
@@ -109,7 +124,7 @@ export const canvasTools = {
         for (let i = 0; i < canvasTools.dimensions; i++) {
             canvasTools.grid[i] = [];
             for (let j = 0; j < canvasTools.dimensions; j++) {
-                canvasTools.grid[i][j] = {pheromone: 0, occupant: null};
+                canvasTools.grid[i][j] = { pheromone: 0, occupant: null };
             }
         }
     },
@@ -119,7 +134,22 @@ export const canvasTools = {
         for (let i = 0; i < canvasTools.dimensions; i++) {
             for (let j = 0; j < canvasTools.dimensions; j++) {
                 canvasTools.grid[i][j].occupant = null;
-                canvasTools.grid[i][j].pheromone = (canvasTools.grid[i][j].pheromone / canvasTools.pheromoneDecayRate).toFixed(2);
+                if (canvasTools.grid[i][j].pheromone > 0) {
+                    console.log(
+                        'before decay',
+                        canvasTools.grid[i][j].pheromone
+                    );
+                    canvasTools.grid[i][j].pheromone = parseFloat(
+                        (
+                            canvasTools.grid[i][j].pheromone /
+                            canvasTools.pheromoneDecayRate
+                        ).toFixed(2)
+                    );
+                    console.log(
+                        'after decay',
+                        canvasTools.grid[i][j].pheromone
+                    );
+                }
             }
         }
     },
@@ -133,13 +163,14 @@ export const canvasTools = {
     },
 
     loop: (ctx, prevTime = 0) => {
-        uiTools.debounce('blockActions', canvasTools.processBlockActions, canvasTools.stepRatePerSecond);
+        uiTools.debounce(
+            'blockActions',
+            canvasTools.processBlockActions,
+            canvasTools.stepRatePerSecond
+        );
         const now = Date.now();
         canvasTools.draw(ctx);
         uiTools.FPS = Math.round(1000 / (Date.now() - prevTime));
         window.requestAnimationFrame(() => canvasTools.loop(ctx, now));
     },
 };
-
-
-

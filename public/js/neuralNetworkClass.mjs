@@ -24,11 +24,11 @@ export class NeuralNetwork {
         // they sum up all their inputs and squish it to this range with tanh(sum(inputs))
         // outputs final values are the probabilities of the actions being taken negative or positive
         // some outputs will only fire if their value is positive
-
+   
         for (let index = 0; index < this.connections.length; index++) {
             const connection = this.connections[index];
             // if the source is an input neuron, multiply the input value with the weight
-            if (connection.source.type === 'input') {
+            if (connection.source.layer === 'Input') {
                 // The value that is sent should be preferably between -4 and 4
                 connection.sink.receivedValues.push(
                     connection.source.value * connection.weight
@@ -39,14 +39,15 @@ export class NeuralNetwork {
         for (let index = 0; index < this.connections.length; index++) {
             const connection = this.connections[index];
             // if the source is a hidden neuron, sum all the received values and squish it with tanh
-            if (connection.source.type === 'hidden') {
+            if (connection.source.layer === 'Hidden') {
                 connection.source.value = Math.tanh(neuralNetworkTools.sumValues(connection.source.receivedValues));
+                connection.source.receivedValues = [];
             }
         }
         for (let index = 0; index < this.connections.length; index++) {
             const connection = this.connections[index];
             // then send the result to the sink
-            if (connection.source.type === 'hidden') {
+            if (connection.source.layer === 'Hidden') {
                 connection.sink.receivedValues.push(
                     connection.source.value * connection.weight
                 );
@@ -57,8 +58,9 @@ export class NeuralNetwork {
         for (let index = 0; index < this.outputs.length; index++) {
             const output = this.outputs[index];
             output.value = Math.tanh(neuralNetworkTools.sumValues(output.receivedValues));
+            output.receivedValues = [];
+            // console.log(`Output ${output.name} value: ${output.value}`);
         }
-
 
     }
     processInputActions(block, grid) {
@@ -77,15 +79,8 @@ export class NeuralNetwork {
             output.action({block, grid, value: output.value});
         }
     }
-    evolveGenome() {
-        // mutate the weights
-        this.weights_ih = neuralNetworkTools.mutateWeights(
-            this.weights_ih,
-            0.1
-        );
-        this.weights_ho = neuralNetworkTools.mutateWeights(
-            this.weights_ho,
-            0.1
-        );
-    }
+    // evolveGenome() {
+    //     // mutate the weights?
+
+    // }
 }
