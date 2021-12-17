@@ -95,6 +95,7 @@ export const neuralNetworkTools = {
             processIndex();
 
             if (JSON.stringify(hiddens[i]) === JSON.stringify(hiddens[index])) {
+                // TODO: I dont think we need to stringify here for equality check
                 // it connected to its self, make a second connection thats not to its self
                 let selfIndex = index;
                 function getNewIndex() {
@@ -109,6 +110,54 @@ export const neuralNetworkTools = {
                 processIndex();
             }
         }
+        // Cull hidden layer neurons that never chain to an output neuron
+        // Label the connection as good if the sinks layer is = Output
+        // Label the connection as good if the sink is a source of a different connection that has been labelled good
+        // We recursively check the connections over and over
+        // When one iteration of the recursion has not labelled any connections as good, we know that the recursion is finished
+        // Then the remaining unlabelled connections are not connected to an output neuron and are culled
+        
+        function cullDisconnectedNeurons() {
+            let recusiveCounter = 0;
+            for (let i = 0; i < connections.length; i++) {
+                let connection = connections[i];
+                if (connection.sink.layer === 'Output' && connection.good === undefined) {
+                    connection.good = true;
+                    recusiveCounter++;
+                } else if (connection.sink.layer === 'Hidden' && connection.good === undefined) {
+                    for (let j = 0; j < connections.length; j++) {
+                        let otherConnection = connections[j];
+                        if (
+                            otherConnection.good &&
+                            otherConnection.source === connection.sink
+                        ) {
+                            connection.good = true;
+                            recusiveCounter++;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (recusiveCounter > 0) {
+                // At least one connection has been labelled good, so we need to recurse again
+                cullDisconnectedNeurons();
+            } else {
+                // Iterate in reverse so not to mess up the index
+                for (let i = connections.length -1; i >= 0; i--) {
+                    let connection = connections[i];
+                    if (!connection.good) {
+                        console.log('Culling:', connection);
+                        connections.splice(i, 1);
+                    }
+                }
+            }
+            // remove the good property from the connections
+            for (let i = 0; i < connections.length; i++) {
+                delete connections[i].good;
+            }
+        }
+        cullDisconnectedNeurons();
+
         return connections;
     },
     generateColorFromGenome(connections) {
