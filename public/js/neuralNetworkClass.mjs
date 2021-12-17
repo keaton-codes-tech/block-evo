@@ -71,12 +71,12 @@ export class NeuralNetwork {
             input.value = input.action({block, grid});
         }
     }
-    processOutputActions(block, grid) {
+    processOutputActions(block, grid, population) {
         // Process Output actions
         // Outputs fire depending on their value
         for (let index = 0; index < this.outputs.length; index++) {
             const output = this.outputs[index];
-            output.action({block, grid, value: output.value});
+            output.action({block, grid, value: output.value, population});
         }
     }
     // evolveGenome() {

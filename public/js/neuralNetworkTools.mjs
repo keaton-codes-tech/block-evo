@@ -146,7 +146,7 @@ export const neuralNetworkTools = {
                 for (let i = connections.length -1; i >= 0; i--) {
                     let connection = connections[i];
                     if (!connection.good) {
-                        console.log('Culling:', connection);
+                        //console.log('Culling:', connection);
                         connections.splice(i, 1);
                     }
                 }

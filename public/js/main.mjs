@@ -132,6 +132,13 @@ const init = () => {
         });
         infoPanel.appendChild(FPSinfo);
 
+        const numBlocksInfo = uiTools.createInfoPanelElement({
+            id: 'numblocks-info',
+            label: 'Population',
+            value: '',
+        });
+        infoPanel.appendChild(numBlocksInfo);
+
         // insert the info panel into the DOM
         uiContainer.appendChild(infoPanel);
     }

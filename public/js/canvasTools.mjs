@@ -10,7 +10,7 @@ export const canvasTools = {
     blockWidth: 20,
     dimensions: 30,
     startingPopulation: 1,
-    stepRatePerSecond: 3 * 1000,
+    stepRatePerSecond: 1 * 1000,
     pheromoneDecayRate: 1.3, // 30% decay per tick
 
     drawGrid: (ctx, dimensions, blockWidth) => {
@@ -40,7 +40,7 @@ export const canvasTools = {
         canvasTools.clearCanvas(ctx);
 
         // draw the objects
-        uiTools.updateInfo();
+        uiTools.updateInfo(canvasTools.population.length);
         canvasTools.drawGrid(
             ctx,
             canvasTools.dimensions,
@@ -113,7 +113,7 @@ export const canvasTools = {
 
     processBlockActions: () => {
         canvasTools.population.forEach((block) => {
-            block.processStep(canvasTools.grid);
+            block.processStep(canvasTools.grid, canvasTools.population);
         });
         canvasTools.updateGrid();
         canvasTools.populateGrid();
@@ -135,19 +135,11 @@ export const canvasTools = {
             for (let j = 0; j < canvasTools.dimensions; j++) {
                 canvasTools.grid[i][j].occupant = null;
                 if (canvasTools.grid[i][j].pheromone > 0) {
-                    console.log(
-                        'before decay',
-                        canvasTools.grid[i][j].pheromone
-                    );
                     canvasTools.grid[i][j].pheromone = parseFloat(
                         (
                             canvasTools.grid[i][j].pheromone /
                             canvasTools.pheromoneDecayRate
                         ).toFixed(2)
-                    );
-                    console.log(
-                        'after decay',
-                        canvasTools.grid[i][j].pheromone
                     );
                 }
             }

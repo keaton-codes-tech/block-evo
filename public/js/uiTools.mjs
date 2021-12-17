@@ -78,7 +78,7 @@ export const uiTools = {
         }
     },
     // update the info panel
-    updateInfo: () => {
+    updateInfo: (popcount) => {
         function checkIfElementNeedsUpdate(id, newVal) {
             let prev = document.querySelector('#' + id).innerText;
             if (typeof newVal === 'number') {
@@ -93,6 +93,12 @@ export const uiTools = {
             checkIfElementNeedsUpdate('fpsinfo', uiTools.FPS);
         }
         uiTools.debounce('FPS', updateFPS, 500);
+
+        // update the population count info
+        function updatePopulationCount() {
+            checkIfElementNeedsUpdate('numblocks-info', popcount);
+        }
+        uiTools.debounce('numblocks-info', updatePopulationCount, 500);
 
         // update the Block info
         function updateSelectedBlock() {
