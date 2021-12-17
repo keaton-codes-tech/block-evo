@@ -8,14 +8,15 @@ export const possibleInputs = [
         layer: 'Input',
         typeID: '0',
         action: (block, grid) => {
-            // Depends on this blocks grid position and the two blocks left and right of it
-            // Look at blocks left and right to detect if there is a pheromone gradient between 0 and 1
+            // Depends on this blocks grid position and the three blocks left and right of it
             // If there is a gradient, multiply the gradient value by the weight and send it to the target neuron
 
-            //console.log('Slr');
+            
+            
+
             return Math.random();
         },
-    }, // Pheromone gradient left-right
+    }, // Pheromone gradient left-right (smell)
     {
         name: 'Sfd',
         type: 'Pheromone',
@@ -57,7 +58,6 @@ export const possibleInputs = [
         layer: 'Input',
         action: () => {
             // Not dependant on anything, just sends a random value between 0 and 1
-            //console.log('Rnd');
             return Math.random();
         },
     }, // Random input

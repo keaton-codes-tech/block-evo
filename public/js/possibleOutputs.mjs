@@ -1,5 +1,7 @@
 'use strict';
 
+import { blockActionTools } from "./blockActionTools.mjs";
+
 // all output values are between -1 and 1
 export const possibleOutputs = [
     {
@@ -24,11 +26,21 @@ export const possibleOutputs = [
         receivedValues: [],
         action: ({ block, value }) => {
             // Not using probability here
+            const oscillationIntervalMax = 1000;
+            const oscillationIntervalMin = 3;
+            let newVal = block.brain.oscillationInterval;
             if (value > 0) {
-                block.oscillator *= value + 1;
+                newVal *= value + 1;
+                if (newVal > oscillationIntervalMax) {
+                    newVal = oscillationIntervalMax;
+                }
             } else {
-                block.oscillator /= Math.abs(value) + 1;
+                newVal /= Math.abs(value) + 1;
+                if (newVal < oscillationIntervalMin) {
+                    newVal = oscillationIntervalMin;
+                }
             }
+            block.brain.oscillationInterval = newVal;
         },
     }, // Set oscillator period - increase or decrease the default period
     {
@@ -41,16 +53,16 @@ export const possibleOutputs = [
             if (probability(Math.abs(value))) {
                 let newVal;
                 if (value > 0) {
-                    newVal = block.responsiveness + 0.1;
+                    newVal = block.brain.responsiveness + 0.1;
                 } else {
-                    newVal = block.responsiveness - 0.1;
+                    newVal = block.brain.responsiveness - 0.1;
                 }
                 if (newVal < 0) {
                     newVal = 0;
                 } else if (newVal > 1) {
                     newVal = 1;
                 }
-                block.responsiveness = newVal;
+                block.brain.responsiveness = newVal;
             }
         },
     }, // Set responsiveness, increase or decrease the default responsiveness, lowers or raises the threshold probability of all input and output neurons firing
@@ -66,7 +78,7 @@ export const possibleOutputs = [
                 let newPos = resolveMovement('Forward', block, value);
 
                 // Check if new position is valid
-                if (isValidPosition(newPos, grid)) {
+                if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
                     block.x = newPos.x;
                     block.y = newPos.y;
@@ -88,7 +100,7 @@ export const possibleOutputs = [
                 const newPos = resolveMovement(randomDirection, block, value);
 
                 // Check if new position is valid
-                if (isValidPosition(newPos, grid)) {
+                if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
                     block.x = newPos.x;
                     block.y = newPos.y;
@@ -108,7 +120,7 @@ export const possibleOutputs = [
                 const newPos = resolveMovement('Reverse', block, value);
 
                 // Check if new position is valid
-                if (isValidPosition(newPos, grid)) {
+                if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
                     block.x = newPos.x;
                     block.y = newPos.y;
@@ -128,7 +140,7 @@ export const possibleOutputs = [
                 const newPos = resolveMovement('Left-Right', block, value);
 
                 // Check if new position is valid
-                if (isValidPosition(newPos, grid)) {
+                if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
                     block.x = newPos.x;
                     block.y = newPos.y;
@@ -148,7 +160,7 @@ export const possibleOutputs = [
                 const newPos = resolveMovement('East-West', block, value);
 
                 // Check if new position is valid
-                if (isValidPosition(newPos, grid)) {
+                if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
                     block.x = newPos.x;
                     block.y = newPos.y;
@@ -168,7 +180,7 @@ export const possibleOutputs = [
                 const newPos = resolveMovement('North-South', block, value);
 
                 // Check if new position is valid
-                if (isValidPosition(newPos, grid)) {
+                if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
                     block.x = newPos.x;
                     block.y = newPos.y;
@@ -186,7 +198,7 @@ export const possibleOutputs = [
             if (value > 0) {
                 if (probability(value)) {
                     const killPos = resolveMovement('Forward', block, value);
-                    if (isInsideGrid(killPos, grid) && isPositionOccupied(killPos, grid)) {
+                    if (blockActionTools.isInsideGrid(killPos, grid) && blockActionTools.isPositionOccupied(killPos, grid)) {
                         let victim = grid[killPos.x][killPos.y].occupant;
                         console.log('Killing', victim);
                         // Remove occupant from the population
@@ -248,35 +260,4 @@ function resolveMovement(intendedDirection, block, value) {
     }
 
     return newPos;
-}
-
-function isValidPosition(newPos, grid) {
-    if (isInsideGrid(newPos, grid)) {
-        if (isPositionOccupied(newPos, grid)) {
-            // Someone is there already
-            return false;
-        } else {
-            // Position is valid
-            return true;
-        }
-    } else {
-        // Position is outside the grid
-        return false;
-    }
-}
-
-function isInsideGrid(newPos, grid) {
-    if (newPos.x >= 0 && newPos.x < grid.length && newPos.y >= 0 && newPos.y < grid[0].length) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function isPositionOccupied(newPos, grid) {
-    if (grid[newPos.x][newPos.y].occupant !== null) {
-        return true;
-    } else {
-        return false;
-    }
 }
