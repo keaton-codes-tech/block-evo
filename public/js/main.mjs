@@ -102,6 +102,54 @@ const init = () => {
             resetCanvas();
         });
 
+        // create a number of sensory(input) neurons input control
+        const numInputNeurons = uiTools.createControlPanelElement({
+            id: 'num-input-neurons',
+            label: 'Input Neurons',
+            type: 'number',
+            value: '4',
+            min: '1',
+            max: '21',
+            step: '1',
+        });
+        controlPanel.appendChild(numInputNeurons);
+        numInputNeurons.addEventListener('change', (e) => {
+            canvasTools.numInputNeurons = e.target.value;
+            resetCanvas();
+        });
+
+        // create a number of hidden neurons input control
+        const numHiddenNeurons = uiTools.createControlPanelElement({
+            id: 'num-hidden-neurons',
+            label: 'Hidden Neurons',
+            type: 'number',
+            value: '2',
+            min: '1',
+            max: '20',
+            step: '1',
+        });
+        controlPanel.appendChild(numHiddenNeurons);
+        numHiddenNeurons.addEventListener('change', (e) => {
+            canvasTools.numHiddenNeurons = e.target.value;
+            resetCanvas();
+        });
+
+        // create a number of output neurons input control
+        const numOutputNeurons = uiTools.createControlPanelElement({
+            id: 'num-output-neurons',
+            label: 'Output Neurons',
+            type: 'number',
+            value: '2',
+            min: '1',
+            max: '6',
+            step: '1',
+        });
+        controlPanel.appendChild(numOutputNeurons);
+        numOutputNeurons.addEventListener('change', (e) => {
+            canvasTools.numOutputNeurons = e.target.value;
+            resetCanvas();
+        });
+
         // create a reset button
         const resetButton = uiTools.createControlPanelElement({
             id: 'reset',

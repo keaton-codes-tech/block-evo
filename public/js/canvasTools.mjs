@@ -10,6 +10,9 @@ export const canvasTools = {
     blockWidth: 20,
     dimensions: 30,
     startingPopulation: 1,
+    numInputNeurons: 4,
+    numHiddenNeurons: 2,
+    numOutputNeurons: 2,
     stepRatePerSecond: 1000/20,
     pheromoneDecayRate: 1.3, // 30% decay per tick
 
@@ -102,7 +105,7 @@ export const canvasTools = {
         const x = Math.floor(Math.random() * canvasTools.dimensions);
         // get a random number between 0 and the number of rows
         const y = Math.floor(Math.random() * canvasTools.dimensions);
-        canvasTools.population.push(new Block(x, y, 4, 2, 2));
+        canvasTools.population.push(new Block(x, y, canvasTools.numInputNeurons, canvasTools.numHiddenNeurons, canvasTools.numOutputNeurons));
     },
 
     setRandomBlocks: (ctx, numblocks) => {
