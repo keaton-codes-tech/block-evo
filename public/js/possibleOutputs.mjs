@@ -50,17 +50,20 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, value }) => {
+            let responsivenessMin = 0;
+            let responsivenessMax = 1;
+            let responsivenessIncrement = 0.1;
             if (blockActionTools.probability(Math.abs(value))) {
                 let newVal;
                 if (value > 0) {
-                    newVal = block.brain.responsiveness + 0.1;
+                    newVal = block.brain.responsiveness + responsivenessIncrement;
                 } else {
-                    newVal = block.brain.responsiveness - 0.1;
+                    newVal = block.brain.responsiveness - responsivenessIncrement;
                 }
-                if (newVal < 0) {
-                    newVal = 0;
-                } else if (newVal > 1) {
-                    newVal = 1;
+                if (newVal < responsivenessMin) {
+                    newVal = responsivenessMin;
+                } else if (newVal > responsivenessMax) {
+                    newVal = responsivenessMax;
                 }
                 block.brain.responsiveness = newVal;
             }
@@ -101,9 +104,20 @@ export const possibleOutputs = [
 
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
+                    // Change the block's direction to the cardinal direction of the movement
+                    if (newPos.x > block.x) {
+                        block.direction = 'East';
+                    } else if (newPos.x < block.x) {
+                        block.direction = 'West';
+                    } else if (newPos.y < block.y) {
+                        block.direction = 'North';
+                    } else if (newPos.y > block.y) {
+                        block.direction = 'South';
+                    }
                     // If so, allow the movement
                     block.x = newPos.x;
                     block.y = newPos.y;
+
                 }
             }
         },

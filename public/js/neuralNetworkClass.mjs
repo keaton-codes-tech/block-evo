@@ -14,7 +14,7 @@ export class NeuralNetwork {
         this.oscillationInterval = 25;
     }
     feedForward() {
-        // input neurons produce a number between 0 and 1
+        // input neurons produce a number between 0 and 1 *** Considering changing inputs to -1 to 1 ***
         // input neurons multiply their value with their weights and send the result to the sink
 
         // hidden layer neurons produce a number between -1 and 1

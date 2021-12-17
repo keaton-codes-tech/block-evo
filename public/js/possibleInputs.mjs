@@ -1,20 +1,37 @@
 'use strict';
 
-// All input values are between 0 and 1
+import { blockActionTools } from "./blockActionTools.mjs";
+
+// All input values are between 0 and 1 *** CONSIDER CHANGING THIS *** could be better with -1 to 1 range
 export const possibleInputs = [
     {
         name: 'Slr',
         type: 'Pheromone',
         layer: 'Input',
         typeID: '0',
-        action: (block, grid) => {
+        action: ({block, grid}) => {
             // Depends on this blocks grid position and the three blocks left and right of it
-            // If there is a gradient, multiply the gradient value by the weight and send it to the target neuron
+            const range = 3;
+            const values = [];
 
-            
-            
+            for (let i = -range; i <= range; i++) {
+                if (i === 0) {
+                    continue;
+                }
+                const pos = blockActionTools.resolveMovement('Left-Right', block, i, Math.abs(i));
+                if (blockActionTools.isInsideGrid(pos, grid)) {
+                    values.push(grid[pos.x][pos.y].pheromone);
+                } else {
+                    values.push(0);
+                }
+            }
 
-            return Math.random();
+            // Gradient can range from -0.5 to 0.5
+            const gradient = blockActionTools.getGradient(values);
+            // Change the gradient to be between -1 and 1
+            const adjustedGradient = blockActionTools.range(-0.5, 0.5, -1, 1, gradient);
+
+            return adjustedGradient;
         },
     }, // Pheromone gradient left-right (smell)
     {
