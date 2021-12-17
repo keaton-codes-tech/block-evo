@@ -12,7 +12,7 @@ export const possibleOutputs = [
         receivedValues: [],
         action: ({ block, grid, value }) => {
             if (value > 0) {
-                if (probability(value)) {
+                if (blockActionTools.probability(value)) {
                     grid[block.x][block.y].pheromone = 1;
                 }
             }
@@ -50,7 +50,7 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, value }) => {
-            if (probability(Math.abs(value))) {
+            if (blockActionTools.probability(Math.abs(value))) {
                 let newVal;
                 if (value > 0) {
                     newVal = block.brain.responsiveness + 0.1;
@@ -73,9 +73,9 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, grid, value }) => {
-            if (probability(Math.abs(value))) {
+            if (blockActionTools.probability(Math.abs(value))) {
                 // Get the x and y coords of the intended movement
-                let newPos = resolveMovement('Forward', block, value);
+                let newPos = blockActionTools.resolveMovement('Forward', block, value);
 
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
@@ -93,11 +93,11 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, grid, value }) => {
-            if (probability(Math.abs(value))) {
+            if (blockActionTools.probability(Math.abs(value))) {
                 // Get the x and y coords of the intended movement
                 const possibilities = ['Forward', 'Left-Right', 'Reverse'];
                 const randomDirection = possibilities[Math.floor(Math.random() * possibilities.length)];
-                const newPos = resolveMovement(randomDirection, block, value);
+                const newPos = blockActionTools.resolveMovement(randomDirection, block, value);
 
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
@@ -115,9 +115,9 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, grid, value }) => {
-            if (probability(Math.abs(value))) {
+            if (blockActionTools.probability(Math.abs(value))) {
                 // Get the x and y coords of the intended movement
-                const newPos = resolveMovement('Reverse', block, value);
+                const newPos = blockActionTools.resolveMovement('Reverse', block, value);
 
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
@@ -135,9 +135,9 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, grid, value }) => {
-            if (probability(Math.abs(value))) {
+            if (blockActionTools.probability(Math.abs(value))) {
                 // Get the x and y coords of the intended movement
-                const newPos = resolveMovement('Left-Right', block, value);
+                const newPos = blockActionTools.resolveMovement('Left-Right', block, value);
 
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
@@ -155,9 +155,9 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, grid, value }) => {
-            if (probability(Math.abs(value))) {
+            if (blockActionTools.probability(Math.abs(value))) {
                 // Get the x and y coords of the intended movement
-                const newPos = resolveMovement('East-West', block, value);
+                const newPos = blockActionTools.resolveMovement('East-West', block, value);
 
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
@@ -175,9 +175,9 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, grid, value }) => {
-            if (probability(Math.abs(value))) {
+            if (blockActionTools.probability(Math.abs(value))) {
                 // Get the x and y coords of the intended movement
-                const newPos = resolveMovement('North-South', block, value);
+                const newPos = blockActionTools.resolveMovement('North-South', block, value);
 
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
@@ -196,8 +196,8 @@ export const possibleOutputs = [
         receivedValues: [],
         action: ({ block, grid, value, population }) => {
             if (value > 0) {
-                if (probability(value)) {
-                    const killPos = resolveMovement('Forward', block, value);
+                if (blockActionTools.probability(value)) {
+                    const killPos = blockActionTools.resolveMovement('Forward', block, value);
                     if (blockActionTools.isInsideGrid(killPos, grid) && blockActionTools.isPositionOccupied(killPos, grid)) {
                         let victim = grid[killPos.x][killPos.y].occupant;
                         console.log('Killing', victim);
@@ -210,54 +210,4 @@ export const possibleOutputs = [
     }, // Kill forward neighbour
 ];
 
-function probability(n) {
-    return Math.random() < n;
-}
 
-function resolveMovement(intendedDirection, block, value) {
-    let increment;
-    let newPos = { x: block.x, y: block.y };
-    if (value > 0) {
-        increment = 1;
-    } else {
-        increment = -1;
-    }
-
-    if (intendedDirection === 'Forward') {
-        if (block.direction === 'North') {
-            newPos.y -= increment;
-        } else if (block.direction === 'East') {
-            newPos.x += increment;
-        } else if (block.direction === 'South') {
-            newPos.y += increment;
-        } else if (block.direction === 'West') {
-            newPos.x -= increment;
-        }
-    } else if (intendedDirection === 'Left-Right') {
-        if (block.direction === 'North') {
-            newPos.x -= increment;
-        } else if (block.direction === 'East') {
-            newPos.y += increment;
-        } else if (block.direction === 'South') {
-            newPos.x += increment;
-        } else if (block.direction === 'West') {
-            newPos.y -= increment;
-        }
-    } else if (intendedDirection === 'Reverse') {
-        if (block.direction === 'North') {
-            newPos.y += increment;
-        } else if (block.direction === 'East') {
-            newPos.x -= increment;
-        } else if (block.direction === 'South') {
-            newPos.y -= increment;
-        } else if (block.direction === 'West') {
-            newPos.x += increment;
-        }
-    } else if (intendedDirection === 'East-West') {
-        newPos.x += increment;
-    } else if (intendedDirection === 'North-South') {
-        newPos.y += increment;
-    }
-
-    return newPos;
-}
