@@ -44,7 +44,7 @@ export const possibleInputs = [
             //console.log('Sfd');
             return Math.random();
         },
-    }, // Pheromone gradient forward
+    }, // Pheromone gradient forward (smell)
     {
         name: 'Sg',
         type: 'Pheromone',
