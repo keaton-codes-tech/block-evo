@@ -2,6 +2,7 @@
 
 import { possibleInputs } from "./possibleInputs.mjs"; 
 import { possibleOutputs } from "./possibleOutputs.mjs"; 
+import { blockActionTools } from "./blockActionTools.mjs";
 
 export const neuralNetworkTools = {
     getRandomInputs(numInputs) {
@@ -237,22 +238,10 @@ export const neuralNetworkTools = {
             // Bit 1-8 = Weight (floating point weight is rounded off to 8 bits)
 
             function generateBlueColorChannel(weight) {
-                if (weight >= 0) {
-                    let binaryChannel = weight
-                        .toString(2)
-                        .substring(2, 10)
-                        .padStart(8, '0');
-                    let base10Channel = parseInt(binaryChannel, 2);
-                    globalBlue += base10Channel;
-                } else {
-                    weight = Math.abs(weight);
-                    let binaryChannel = weight
-                        .toString(2)
-                        .substring(2, 10)
-                        .padStart(8, '0');
-                    let base10Channel = parseInt(binaryChannel, 2);
-                    globalBlue += Math.round(base10Channel / 2);
-                }
+                // weight is a float between -4 and 4
+                // convert its range to beween 0 and 255
+                let base10Channel = blockActionTools.range(-4, 4, 0, 255, weight);
+                globalBlue += base10Channel;
             }
             generateBlueColorChannel(connection.weight);
         });
