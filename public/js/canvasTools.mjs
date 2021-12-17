@@ -10,7 +10,7 @@ export const canvasTools = {
     blockWidth: 20,
     dimensions: 30,
     startingPopulation: 1,
-    stepRatePerSecond: 1 * 1000,
+    stepRatePerSecond: 1000/20,
     pheromoneDecayRate: 1.3, // 30% decay per tick
 
     drawGrid: (ctx, dimensions, blockWidth) => {

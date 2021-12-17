@@ -93,7 +93,7 @@ const init = () => {
             type: 'number',
             value: '1',
             min: '1',
-            max: '50',
+            max: '300',
             step: '1',
         });
         controlPanel.appendChild(startingPopInput);
