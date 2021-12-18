@@ -85,15 +85,15 @@ export const blockActionTools = {
     },
 
     getGradient(values) {
-        let left = 0;
+        let firstSide = 0;
         for (let index = 0; index < values.length / 2; index++) {
-            left += values[index];
+            firstSide += values[index];
         }
-        let right = 0;
+        let secondSide = 0;
         for (let index = values.length / 2; index < values.length; index++) {
-            right += values[index];
+            secondSide += values[index];
         }
-        const rise = right - left;
+        const rise = secondSide - firstSide;
         const run = values.length;
         const gradient = rise / run;
         return gradient;

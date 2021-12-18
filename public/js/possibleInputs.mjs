@@ -168,11 +168,30 @@ export const possibleInputs = [
         type: 'Environement',
         typeID: '1',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on this blocks grid position and the one block in front of it
             // Needs to know if that space exists or not (barrier) or if that space is empty or not (occupied already)
-            //console.log('Bfd');
-            return Math.random();
+            const range = 1;
+            const values = [];
+
+            for (let i = -range; i <= range; i++) {
+                if (i === 0) {
+                    continue;
+                }
+                const pos = blockActionTools.resolveMovement('Forward', block, i, Math.abs(i));
+                if (blockActionTools.isInsideGrid(pos, grid) && grid[pos.x][pos.y].occupant === null) {
+                    values.push(0);
+                } else {
+                    values.push(1);
+                }
+            }
+
+            // Gradient can range from -0.5 to 0.5
+            const gradient = blockActionTools.getGradient(values);
+            // Change the gradient to be between -1 and 1
+            const adjustedGradient = blockActionTools.range(-0.5, 0.5, -1, 1, gradient);
+            
+            return adjustedGradient;
         },
     }, // Blockage forward
     {
@@ -180,9 +199,28 @@ export const possibleInputs = [
         type: 'Environement',
         typeID: '2',
         layer: 'Input',
-        action: () => {
-            //console.log('LBf');
-            return Math.random();
+        action: ({block, grid}) => {
+            const range = 3;
+            const values = [];
+
+            for (let i = -range; i <= range; i++) {
+                if (i === 0) {
+                    continue;
+                }
+                const pos = blockActionTools.resolveMovement('Forward', block, i, Math.abs(i));
+                if (blockActionTools.isInsideGrid(pos, grid) && grid[pos.x][pos.y].occupant === null) {
+                    values.push(0);
+                } else {
+                    values.push(1);
+                }
+            }
+
+            // Gradient can range from -0.5 to 0.5
+            const gradient = blockActionTools.getGradient(values);
+            // Change the gradient to be between -1 and 1
+            const adjustedGradient = blockActionTools.range(-0.5, 0.5, -1, 1, gradient);
+            
+            return adjustedGradient;
         },
     }, // Blockage long-range forward
     {
@@ -190,10 +228,13 @@ export const possibleInputs = [
         type: 'Environement',
         typeID: '3',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on this blocks grid position
-            //console.log('DBy');
-            return Math.random();
+            // ??? TODO: ???
+            let adjustedPos = block.y / grid[0].length-1 * 100;
+            adjustedPos = blockActionTools.range(0, 100, -1, 1, adjustedPos);
+
+            return adjustedPos;
         },
     }, // North-South border distance
     {
@@ -201,10 +242,13 @@ export const possibleInputs = [
         type: 'Environement',
         typeID: '4',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on this blocks grid position
-            //console.log('BDx');
-            return Math.random();
+            // ??? TODO: ???
+            let adjustedPos = block.x / grid.length-1 * 100;
+            adjustedPos = blockActionTools.range(0, 100, -1, 1, adjustedPos);
+
+            return adjustedPos;
         },
     }, // East-West border distance
     {
@@ -212,10 +256,13 @@ export const possibleInputs = [
         type: 'Environement',
         typeID: '5',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on blocks grid coords
-            //console.log('Lx');
-            return Math.random();
+            // Percentage of the way from the left to the right of the grid
+            let adjustedPos = block.x / grid.length-1 * 100;
+            adjustedPos = blockActionTools.range(0, 100, -1, 1, adjustedPos);
+
+            return adjustedPos;
         },
     }, // East-West world location, value is position in world on x axis represented by float between 0 and 1
     {
@@ -223,10 +270,13 @@ export const possibleInputs = [
         type: 'Environement',
         typeID: '6',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on blocks grid coords
-            //console.log('Ly');
-            return Math.random();
+            // Percentage of the way from the top to the bottom of the grid
+            let adjustedPos = block.y / grid[0].length-1 * 100;
+            adjustedPos = blockActionTools.range(0, 100, -1, 1, adjustedPos);
+
+            return adjustedPos;
         },
     }, // North-South world location, value is position in world on y axis represented by float between 0 and 1
     {
@@ -234,9 +284,14 @@ export const possibleInputs = [
         type: 'Environement',
         typeID: '7',
         layer: 'Input',
-        action: () => {
-            //console.log('BD');
-            return Math.random();
+        action: ({block, grid}) => {
+            // Depends on blocks grid coords
+            const values = [];
+            values.push(block.x); // distance to West border
+            values.push(grid.length-1 - block.x); // distance to East border
+            values.push(block.y); // distance to North border
+            values.push(grid[0].length-1 - block.y); // distance to South border
+            return Math.min(values);
         },
     }, // Nearest border distance
     {
