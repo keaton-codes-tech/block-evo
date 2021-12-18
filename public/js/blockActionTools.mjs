@@ -105,6 +105,20 @@ export const blockActionTools = {
             block.LMy = newPos.y - block.y;
         }
     },
+    getSimilarity(color1, color2) {
+        const color1RGBArray = color1.substring(4, color1.length-1).replace(/ /g, '').split(',');
+        const color2RGBArray = color2.substring(4, color2.length-1).replace(/ /g, '').split(',');
+        const differences = color1RGBArray.map((value, index) => {
+            return Math.abs(value - color2RGBArray[index]);
+        });
+        // sum the differences
+        const sum = differences.reduce((a, b) => a + parseInt(b), 0);
+        // fit to range 0-1
+        const totalPossibleDifference = 255 * 3;
+        const difference = blockActionTools.range(0, totalPossibleDifference, 0, 1, sum);
+        const similarity = 1 - difference;
+        return similarity;
+    },
     // returns the value between two numbers at a specified decimal midpoint
     lerp(x, y, a) {
         return (x * (1 - a) + y * a);

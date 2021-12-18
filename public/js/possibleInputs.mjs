@@ -1,5 +1,6 @@
 'use strict';
 
+import e from "express";
 import { blockActionTools } from "./blockActionTools.mjs";
 
 // All input values are between 0 and 1 *** CONSIDER CHANGING THIS *** could be better with -1 to 1 range
@@ -292,7 +293,7 @@ export const possibleInputs = [
             values.push(grid.length-1 - block.x); // distance to East border
             values.push(block.y); // distance to North border
             values.push(grid[0].length-1 - block.y); // distance to South border
-            return Math.min(values);
+            return Math.min(values); // return the lowest value
         },
     }, // Nearest border distance
     {
@@ -301,8 +302,27 @@ export const possibleInputs = [
         typeID: '0',
         layer: 'Input',
         action: ({block, grid}) => {
-            //console.log('Plr');
-            return Math.random();
+            const range = 1;
+            const values = [];
+
+            for (let i = -range; i <= range; i++) {
+                if (i === 0) {
+                    continue;
+                }
+                const pos = blockActionTools.resolveMovement('Left-Right', block, i, Math.abs(i));
+                if (grid[pos.x][pos.y].occupant !== null) {
+                    values.push(1);
+                } else {
+                    values.push(0);
+                }
+            }
+
+            // Gradient can range from -0.5 to 0.5
+            const gradient = blockActionTools.getGradient(values);
+            // Change the gradient to be between -1 and 1
+            const adjustedGradient = blockActionTools.range(-0.5, 0.5, -1, 1, gradient);
+            
+            return adjustedGradient;
         },
     }, // Population gradient left-right
     {
@@ -310,11 +330,30 @@ export const possibleInputs = [
         type: 'Social',
         typeID: '1',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on the grid position of the block and the three blocks in front of it
             // Output depends on the gradient of population density from its position through the three blocks in front of it
-            //console.log('Pfd');
-            return Math.random();
+            const range = 1;
+            const values = [];
+
+            for (let i = -range; i <= range; i++) {
+                if (i === 0) {
+                    continue;
+                }
+                const pos = blockActionTools.resolveMovement('Forward', block, i, Math.abs(i));
+                if (grid[pos.x][pos.y].occupant !== null) {
+                    values.push(1);
+                } else {
+                    values.push(0);
+                }
+            }
+
+            // Gradient can range from -0.5 to 0.5
+            const gradient = blockActionTools.getGradient(values);
+            // Change the gradient to be between -1 and 1
+            const adjustedGradient = blockActionTools.range(-0.5, 0.5, -1, 1, gradient);
+            
+            return adjustedGradient;
         },
     }, // Population gradient forward
     {
@@ -322,11 +361,26 @@ export const possibleInputs = [
         type: 'Social',
         typeID: '2',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on the grid position of the block and its immediate neighbours
             // The higher the population density, the higher the output
-            //console.log('Pop');
-            return Math.random();
+            // 8 squares to check
+            // return 8 / squaresOccupied * 100 // percentage of squares occupied
+            // fit to range 0-1
+            let count = 0;
+
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    if (i === 0 && j === 0) {
+                        continue;
+                    }
+                    if (grid[block.x+i][block.y+j].occupant !== null) {
+                        count++;
+                    }
+                }
+            }
+            count = 8 / count * 100;
+            return blockActionTools.range(0, 100, 0, 1, count);
         },
     }, // Population density
     {
@@ -334,9 +388,8 @@ export const possibleInputs = [
         type: 'Social',
         typeID: '3',
         layer: 'Input',
-        action: () => {
-            //console.log('LPf');
-            return Math.random();
+        action: ({block, grid}) => {
+            
         },
     }, // Population long-range forward
     {
@@ -344,11 +397,23 @@ export const possibleInputs = [
         type: 'Social',
         typeID: '4',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on knowledge of the grid space one block in the forward direction
             // and knowlegde of the blocks brain if there is one present in that position
-            //console.log('Gen');
-            return Math.random();
+            // compare the color of this block to the color of the block in the forward direction to estimate genetic similarity
+            // return a value between 0 and 1
+            const pos = blockActionTools.resolveMovement('Forward', block, 1, 1);
+            if (blockActionTools.isInsideGrid(pos, grid)) {
+                const blockInFront = grid[pos.x][pos.y].occupant;
+                if (blockInFront !== null) {
+                    return blockActionTools.getSimilarity(block.color, blockInFront.color);
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+
         },
     }, // Genetic similarity of forward neighbour
 ];
