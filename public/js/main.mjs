@@ -150,6 +150,22 @@ const init = () => {
             resetCanvas();
         });
 
+        // create a step speed input control
+        const stepSpeedControl = uiTools.createControlPanelElement({
+            id: 'step-speed-control',
+            label: 'Steps Per Second',
+            type: 'number',
+            value: '20',
+            min: '1',
+            max: '100',
+            step: '1',
+        });
+        controlPanel.appendChild(stepSpeedControl);
+        stepSpeedControl.addEventListener('change', (e) => {
+            canvasTools.stepRatePerSecond = 1000 / e.target.value;
+            resetCanvas();
+        });
+
         // create a reset button
         const resetButton = uiTools.createControlPanelElement({
             id: 'reset',

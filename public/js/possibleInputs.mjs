@@ -299,7 +299,7 @@ export const possibleInputs = [
         type: 'Social',
         typeID: '0',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             //console.log('Plr');
             return Math.random();
         },

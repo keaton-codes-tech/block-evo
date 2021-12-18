@@ -124,6 +124,7 @@ export const canvasTools = {
 
     createGrid: () => {
         // Create two dimensional array
+        canvasTools.grid = [];
         for (let i = 0; i < canvasTools.dimensions; i++) {
             canvasTools.grid[i] = [];
             for (let j = 0; j < canvasTools.dimensions; j++) {

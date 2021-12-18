@@ -116,6 +116,7 @@ export const possibleOutputs = [
                         block.direction = 'South';
                     }
                     // If so, allow the movement
+                    blockActionTools.saveLastMovement(block, newPos);
                     block.x = newPos.x;
                     block.y = newPos.y;
 
@@ -137,6 +138,7 @@ export const possibleOutputs = [
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
+                    blockActionTools.saveLastMovement(block, newPos);
                     block.x = newPos.x;
                     block.y = newPos.y;
                 }
@@ -157,6 +159,7 @@ export const possibleOutputs = [
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
+                    blockActionTools.saveLastMovement(block, newPos);
                     block.x = newPos.x;
                     block.y = newPos.y;
                 }
@@ -177,6 +180,7 @@ export const possibleOutputs = [
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
+                    blockActionTools.saveLastMovement(block, newPos);
                     block.x = newPos.x;
                     block.y = newPos.y;
                 }
@@ -197,6 +201,7 @@ export const possibleOutputs = [
                 // Check if new position is valid
                 if (blockActionTools.isValidPosition(newPos, grid)) {
                     // If so, allow the movement
+                    blockActionTools.saveLastMovement(block, newPos);
                     block.x = newPos.x;
                     block.y = newPos.y;
                 }
