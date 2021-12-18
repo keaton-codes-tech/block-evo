@@ -11,7 +11,7 @@ export class NeuralNetwork {
             this.hiddens,
             this.outputs
         );
-        this.responsiveness = 0.5;
+        this.responsiveness = 1;
         this.oscillationInterval = 25;
     }
     feedForward() {
@@ -32,7 +32,7 @@ export class NeuralNetwork {
             if (connection.source.layer === 'Input') {
                 // The value that is sent should be preferably between -4 and 4
                 connection.sink.receivedValues.push(
-                    connection.source.value * connection.weight
+                    connection.source.value * connection.weight * this.responsiveness
                 );
             }
         }

@@ -26,8 +26,9 @@ export const possibleOutputs = [
         receivedValues: [],
         action: ({ block, value }) => {
             // Not using probability here
+            //console.log('OSC', value);
             const oscillationIntervalMax = 1000;
-            const oscillationIntervalMin = 3;
+            const oscillationIntervalMin = 4;
             let newVal = block.brain.oscillationInterval;
             if (value > 0) {
                 newVal *= value + 1;
@@ -50,8 +51,8 @@ export const possibleOutputs = [
         layer: 'Output',
         receivedValues: [],
         action: ({ block, value }) => {
-            let responsivenessMin = 0;
-            let responsivenessMax = 1;
+            let responsivenessMin = 0.5;
+            let responsivenessMax = 1.5;
             let responsivenessIncrement = 0.1;
             if (blockActionTools.probability(Math.abs(value))) {
                 let newVal;
