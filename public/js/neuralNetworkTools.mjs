@@ -165,6 +165,10 @@ export const neuralNetworkTools = {
         let globalGreen = 0;
         let globalBlue = 0;
 
+        if (connections.length === 0) {
+            return 'rgb(0,0,0)';
+        }
+
         // Generate a colour per gene (a connection represents a gene)
         connections.forEach((connection) => {
             // Source Layer: input = 0, hidden = 1
