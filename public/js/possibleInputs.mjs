@@ -106,7 +106,8 @@ export const possibleInputs = [
         layer: 'Input',
         action: ({block}) => {
             // Frequency of full oscillation wave is default to 25 steps and can be changed by an output
-            let oscillationValue = parseFloat(Math.sin( block.age * Math.PI / block.brain.oscillationInterval*2 ).toFixed(5));
+            let oscillationValue = parseFloat(Math.sin( 2 * Math.PI / block.brain.oscillationInterval * block.age ).toFixed(5));
+            
             return oscillationValue;
         },
     }, // Oscillator
