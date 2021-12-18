@@ -9,6 +9,9 @@ export class Block {
         this.brain = new NeuralNetwork(numInputs, numHiddens, numOutputs);
         this.color = neuralNetworkTools.generateColorFromGenome(this.brain.connections);
         this.direction = neuralNetworkTools.getRandomDirection();
+        this.age = 0;
+        this.LMx = 0;
+        this.LMy = 0;
     }
     paint(ctx) {
         ctx.fillStyle = this.color;
@@ -20,6 +23,7 @@ export class Block {
         );
     }
     processStep(grid, population) {
+        this.age++;
         this.brain.processInputActions(this, grid);
         this.brain.feedForward();
         this.brain.processOutputActions(this, grid, population);

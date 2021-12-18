@@ -98,6 +98,13 @@ export const blockActionTools = {
         const gradient = rise / run;
         return gradient;
     },
+    saveLastMovement(block, newPos) {
+        if (block.x !== newPos.x) {
+            block.LMx = newPos.x - block.x;
+        } else if (block.y !== newPos.y) {
+            block.LMy = newPos.y - block.y;
+        }
+    },
     // returns the value between two numbers at a specified decimal midpoint
     lerp(x, y, a) {
         return (x * (1 - a) + y * a);

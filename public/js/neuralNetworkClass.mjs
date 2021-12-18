@@ -1,4 +1,5 @@
 import { neuralNetworkTools } from './neuralNetworkTools.mjs';
+import { blockActionTools } from './blockActionTools.mjs';
 
 export class NeuralNetwork {
     constructor(numInputs, numHiddens, numOutputs) {

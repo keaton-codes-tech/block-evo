@@ -7,9 +7,9 @@ export const canvasTools = {
     population: [],
     grid: [],
     lineWidth: 1,
-    blockWidth: 20,
-    dimensions: 30,
-    startingPopulation: 1,
+    blockWidth: 5,
+    dimensions: 128,
+    startingPopulation: 1000,
     numInputNeurons: 4,
     numHiddenNeurons: 2,
     numOutputNeurons: 2,
@@ -44,11 +44,11 @@ export const canvasTools = {
 
         // draw the objects
         uiTools.updateInfo(canvasTools.population.length);
-        canvasTools.drawGrid(
-            ctx,
-            canvasTools.dimensions,
-            canvasTools.blockWidth
-        );
+        // canvasTools.drawGrid(
+        //     ctx,
+        //     canvasTools.dimensions,
+        //     canvasTools.blockWidth
+        // );
         canvasTools.drawBlocks(ctx);
         canvasTools.drawMouse(ctx);
     },

@@ -58,9 +58,9 @@ const init = () => {
             id: 'dimensions',
             label: 'Dimensions',
             type: 'number',
-            value: '30',
+            value: '128',
             min: '8',
-            max: '128',
+            max: '256',
             step: '1',
         });
         controlPanel.appendChild(dimensionsInput);
@@ -75,8 +75,8 @@ const init = () => {
             id: 'block-width',
             label: 'Block Width',
             type: 'number',
-            value: '20',
-            min: '10',
+            value: '5',
+            min: '2',
             max: '100',
             step: '1',
         });
@@ -91,9 +91,9 @@ const init = () => {
             id: 'starting-population',
             label: 'Starting Population',
             type: 'number',
-            value: '1',
+            value: '1000',
             min: '1',
-            max: '300',
+            max: '5000',
             step: '1',
         });
         controlPanel.appendChild(startingPopInput);
@@ -211,6 +211,13 @@ const init = () => {
             value: '',
         });
         infoPanel.appendChild(blockY);
+
+        const blockAge = uiTools.createInfoPanelElement({
+            id: 'block-age-info',
+            label: 'Age',
+            value: '',
+        });
+        infoPanel.appendChild(blockAge);
 
         const blockColor = uiTools.createInfoPanelElement({
             id: 'block-color-info',

@@ -95,14 +95,13 @@ export const neuralNetworkTools = {
             }
             processIndex();
 
-            if (i === index) {
+            if (index === i) {
                 // it connected to its self, make a second connection thats not to its self
-                let selfIndex = index;
                 function getNewIndex() {
                     index = Math.floor(
                         Math.random() * (hiddens.length + outputs.length)
                     );
-                    if (index === selfIndex) {
+                    if (index === i) {
                         getNewIndex();
                     }
                 }
@@ -118,12 +117,12 @@ export const neuralNetworkTools = {
         // Then the remaining unlabelled connections are not connected to an output neuron and are culled
         
         function cullDisconnectedNeurons() {
-            let recusiveCounter = 0;
+            let numOfGoodFound = 0;
             for (let i = 0; i < connections.length; i++) {
                 let connection = connections[i];
                 if (connection.sink.layer === 'Output' && connection.good === undefined) {
                     connection.good = true;
-                    recusiveCounter++;
+                    numOfGoodFound++;
                 } else if (connection.sink.layer === 'Hidden' && connection.good === undefined) {
                     for (let j = 0; j < connections.length; j++) {
                         let otherConnection = connections[j];
@@ -132,13 +131,13 @@ export const neuralNetworkTools = {
                             otherConnection.source === connection.sink
                         ) {
                             connection.good = true;
-                            recusiveCounter++;
+                            numOfGoodFound++;
                             break;
                         }
                     }
                 }
             }
-            if (recusiveCounter > 0) {
+            if (numOfGoodFound > 0) {
                 // At least one connection has been labelled good, so we need to recurse again
                 cullDisconnectedNeurons();
             } else {
@@ -235,7 +234,6 @@ export const neuralNetworkTools = {
             generateRedOrGreenColorChannel('green', connection.sink);
 
             // Blue channel
-            // Bit 1-8 = Weight (floating point weight is rounded off to 8 bits)
 
             function generateBlueColorChannel(weight) {
                 // weight is a float between -4 and 4
@@ -282,8 +280,8 @@ export const neuralNetworkTools = {
                 if (Math.random() < mutationRate) {
                     // Mutation occurs
                     weights[first][second] = this.getRandomFloatBetweenRange(
-                        -1,
-                        1
+                        -4,
+                        4
                     );
                 }
             }

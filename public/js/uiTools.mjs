@@ -113,6 +113,10 @@ export const uiTools = {
                     uiTools.selectedBlock.y
                 );
                 checkIfElementNeedsUpdate(
+                    'block-age-info',
+                    uiTools.selectedBlock.age
+                );
+                checkIfElementNeedsUpdate(
                     'block-color-info',
                     uiTools.selectedBlock.color
                 );

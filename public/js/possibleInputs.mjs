@@ -39,21 +39,40 @@ export const possibleInputs = [
         type: 'Pheromone',
         typeID: '1',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on this blocks grid position and the three blocks in front of it
-            //console.log('Sfd');
-            return Math.random();
+            const range = 3;
+            const values = [];
+
+            for (let i = -range; i <= range; i++) {
+                if (i === 0) {
+                    continue;
+                }
+                const pos = blockActionTools.resolveMovement('Forward', block, i, Math.abs(i));
+                if (blockActionTools.isInsideGrid(pos, grid)) {
+                    values.push(grid[pos.x][pos.y].pheromone);
+                } else {
+                    values.push(0);
+                }
+            }
+
+            // Gradient can range from -0.5 to 0.5
+            const gradient = blockActionTools.getGradient(values);
+            // Change the gradient to be between -1 and 1
+            const adjustedGradient = blockActionTools.range(-0.5, 0.5, -1, 1, gradient);
+
+            return adjustedGradient;
         },
-    }, // Pheromone gradient forward (smell)
+    }, // Pheromone gradient forward-reverse (smell)
     {
         name: 'Sg',
         type: 'Pheromone',
         typeID: '2',
         layer: 'Input',
-        action: () => {
+        action: ({block, grid}) => {
             // Depends on this blocks grid position
-            //console.log('Sg');
-            return Math.random();
+            
+            return grid[block.x][block.y].pheromone;
         },
     }, // Pheromone density
     {
@@ -61,11 +80,13 @@ export const possibleInputs = [
         type: 'Internal',
         typeID: '0',
         layer: 'Input',
-        action: () => {
+        action: ({block}) => {
             // Output starts at 0 and ends at 1 when the lifetime (total number of steps) is up
             // Depends on number of steps (which need to be kept track of and have a finite amount of them to begin with)
+            // - OR - maybe when block age === lifetime (block dies of old age)
             //console.log('Age');
-            return Math.random();
+            // TODO: create lifetime variable
+            return block.age;
         },
     }, // Age
     {
@@ -83,10 +104,10 @@ export const possibleInputs = [
         type: 'Internal',
         typeID: '2',
         layer: 'Input',
-        action: () => {
-            // Frequency of full oscillation wave is default to 25 steps
-            //console.log('Osc');
-            return Math.random();
+        action: ({block}) => {
+            // Frequency of full oscillation wave is default to 25 steps and can be changed by an output
+            let oscillationValue = parseFloat(Math.sin( block.age * Math.PI / block.brain.oscillationInterval*2 ).toFixed(5));
+            return oscillationValue;
         },
     }, // Oscillator
     {
@@ -94,9 +115,10 @@ export const possibleInputs = [
         type: 'Internal',
         typeID: '3',
         layer: 'Input',
-        action: () => {
-            //console.log('LMy');
-            return Math.random();
+        action: ({block}) => {
+            // If last moved south, will return 1
+            // If last moved north, will return -1
+            return block.LMy;
         },
     }, // Last movement y
     {
@@ -104,9 +126,10 @@ export const possibleInputs = [
         type: 'Internal',
         typeID: '4',
         layer: 'Input',
-        action: () => {
-            //console.log('LMx');
-            return Math.random();
+        action: ({block}) => {
+            // If last moved east, will return 1
+            // If last moved west, will return -1
+            return block.LMx;
         },
     }, // Last movement x
     {
@@ -114,11 +137,30 @@ export const possibleInputs = [
         type: 'Environement',
         typeID: '0',
         layer: 'Input',
-        action: () => {
-            // Depends on this blocks grid position and the two blocks left and right of it
+        action: ({block, grid}) => {
+            // Depends on this blocks grid position and the block left and right of it
             // Needs to know if that space exists or not (barrier) or if that space is empty or not (occupied already)
-            //console.log('Blr');
-            return Math.random();
+            const range = 1;
+            const values = [];
+
+            for (let i = -range; i <= range; i++) {
+                if (i === 0) {
+                    continue;
+                }
+                const pos = blockActionTools.resolveMovement('Left-Right', block, i, Math.abs(i));
+                if (blockActionTools.isInsideGrid(pos, grid) && grid[pos.x][pos.y].occupant === null) {
+                    values.push(0);
+                } else {
+                    values.push(1);
+                }
+            }
+
+            // Gradient can range from -0.5 to 0.5
+            const gradient = blockActionTools.getGradient(values);
+            // Change the gradient to be between -1 and 1
+            const adjustedGradient = blockActionTools.range(-0.5, 0.5, -1, 1, gradient);
+            
+            return adjustedGradient;
         },
     }, // Blockage left-right
     {
