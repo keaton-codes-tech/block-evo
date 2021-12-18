@@ -1,6 +1,5 @@
 'use strict';
 
-import e from "express";
 import { blockActionTools } from "./blockActionTools.mjs";
 
 // All input values are between 0 and 1 *** CONSIDER CHANGING THIS *** could be better with -1 to 1 range
@@ -310,8 +309,12 @@ export const possibleInputs = [
                     continue;
                 }
                 const pos = blockActionTools.resolveMovement('Left-Right', block, i, Math.abs(i));
-                if (grid[pos.x][pos.y].occupant !== null) {
-                    values.push(1);
+                if (blockActionTools.isInsideGrid(pos, grid)) {
+                    if (grid[pos.x][pos.y].occupant !== null) {
+                        values.push(1);
+                    } else {
+                        values.push(0);
+                    }
                 } else {
                     values.push(0);
                 }
@@ -341,8 +344,12 @@ export const possibleInputs = [
                     continue;
                 }
                 const pos = blockActionTools.resolveMovement('Forward', block, i, Math.abs(i));
-                if (grid[pos.x][pos.y].occupant !== null) {
-                    values.push(1);
+                if (blockActionTools.isInsideGrid(pos, grid)) {
+                    if (grid[pos.x][pos.y].occupant !== null) {
+                        values.push(1);
+                    } else {
+                        values.push(0);
+                    }                    
                 } else {
                     values.push(0);
                 }
@@ -374,8 +381,10 @@ export const possibleInputs = [
                     if (i === 0 && j === 0) {
                         continue;
                     }
-                    if (grid[block.x+i][block.y+j].occupant !== null) {
-                        count++;
+                    if (blockActionTools.isInsideGrid({x: block.x+i, y: block.y+j}, grid)) {
+                        if (grid[block.x+i][block.y+j].occupant !== null) {
+                            count++;
+                        }                        
                     }
                 }
             }
@@ -389,7 +398,63 @@ export const possibleInputs = [
         typeID: '3',
         layer: 'Input',
         action: ({block, grid}) => {
-            
+            // Depends on the grid position of the block and the blocks in front of it all the way to the edge of the grid
+            // Return 0 - 1
+            // Check which heading is forward and count how many blocks are in front until the edge
+            // values.push(block.x); // distance to West border
+            // values.push(grid.length-1 - block.x); // distance to East border
+            // values.push(block.y); // distance to North border
+            // values.push(grid[0].length-1 - block.y); // distance to South border
+            let values = [];
+            let squaresInFront = 0;
+            if (block.direction === 'North') {
+                squaresInFront = block.y;
+                if (squaresInFront > 0) {
+                    for (let index = 1; index <= squaresInFront; index++) {
+                        if (grid[block.x][block.y-index].occupant === null) {
+                            values.push(0);
+                        } else {
+                            values.push(1);
+                        }
+                    }                    
+                }
+            } else if (block.direction === 'South') {
+                squaresInFront = grid[0].length-1 - block.y;
+                if (squaresInFront > 0) {
+                    for (let index = 1; index <= squaresInFront; index++) {
+                        if (grid[block.x][block.y+index].occupant === null) {
+                            values.push(0);
+                        } else {
+                            values.push(1);
+                        }
+                    }                    
+                }
+            } else if (block.direction === 'East') {
+                squaresInFront = block.x;
+                if (squaresInFront > 0) {
+                    for (let index = 1; index <= squaresInFront; index++) {
+                        if (grid[block.x-index][block.y].occupant === null) {
+                            values.push(0);
+                        } else {
+                            values.push(1);
+                        }
+                    }                    
+                }
+            } else if (block.direction === 'West') {
+                squaresInFront = grid.length-1 - block.x;
+                if (squaresInFront > 0) {
+                    for (let index = 1; index <= squaresInFront; index++) {
+                        if (grid[block.x+index][block.y].occupant === null) {
+                            values.push(0);
+                        } else {
+                            values.push(1);
+                        }
+                    }                    
+                }
+            }
+            const sumValues = values.reduce((a, b) => a + b, 0);
+            let x = values.length / sumValues * 100;
+            return blockActionTools.range(0, 100, 0, 1, x);
         },
     }, // Population long-range forward
     {
@@ -413,7 +478,6 @@ export const possibleInputs = [
             } else {
                 return 0;
             }
-
         },
     }, // Genetic similarity of forward neighbour
 ];
