@@ -3,10 +3,14 @@ import { canvasTools } from "./canvasTools.mjs";
 import { neuralNetworkTools } from "./neuralNetworkTools.mjs";
 
 export class Block {
-    constructor(x, y, numInputs, numHiddens, numOutputs) {
+    constructor({x, y, numInputs, numHiddens, numOutputs, brain}) {
         this.x = x;
         this.y = y;
-        this.brain = new NeuralNetwork(numInputs, numHiddens, numOutputs);
+        if (brain != undefined) {
+            this.brain = brain;
+        } else {
+            this.brain = new NeuralNetwork(numInputs, numHiddens, numOutputs);
+        }
         this.color = neuralNetworkTools.generateColorFromGenome(this.brain.connections);
         this.direction = neuralNetworkTools.getRandomDirection();
         this.age = 0;

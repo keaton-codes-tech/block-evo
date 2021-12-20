@@ -13,7 +13,10 @@ export const canvasTools = {
     numInputNeurons: 4,
     numHiddenNeurons: 2,
     numOutputNeurons: 2,
-    stepRatePerSecond: 1000/20,
+    stepRatePerSecond: 1000 / 20,
+    stepCounter: 0,
+    limitSteps: true,
+    maxSteps: 200,
     pheromoneDecayRate: 1.3, // 30% decay per tick
 
     drawGrid: (ctx, dimensions, blockWidth) => {
@@ -105,7 +108,33 @@ export const canvasTools = {
         const x = Math.floor(Math.random() * canvasTools.dimensions);
         // get a random number between 0 and the number of rows
         const y = Math.floor(Math.random() * canvasTools.dimensions);
-        canvasTools.population.push(new Block(x, y, canvasTools.numInputNeurons, canvasTools.numHiddenNeurons, canvasTools.numOutputNeurons));
+        canvasTools.population.push(
+            new Block({
+                x,
+                y,
+                numInputs: canvasTools.numInputNeurons,
+                numHiddens: canvasTools.numHiddenNeurons,
+                numOutputs: canvasTools.numOutputNeurons,
+            })
+        );
+    },
+
+    setRandomCoords: (block, population) => {
+        const x = Math.floor(Math.random() * canvasTools.dimensions);
+        const y = Math.floor(Math.random() * canvasTools.dimensions);
+        // check if the position is occupied
+        if (
+            population.filter((b) => {
+                if (b.x === x && b.y === y) {
+                    return b;
+                }
+            }).length === 0
+        ) {
+            block.x = x;
+            block.y = y;
+        } else {
+            canvasTools.setRandomCoords(block, population);
+        }
     },
 
     setRandomBlocks: (ctx, numblocks) => {
@@ -115,11 +144,63 @@ export const canvasTools = {
     },
 
     processBlockActions: () => {
-        canvasTools.population.forEach((block) => {
-            block.processStep(canvasTools.grid, canvasTools.population);
-        });
+        if (canvasTools.limitSteps) {
+            if (canvasTools.stepCounter < canvasTools.maxSteps) {
+                canvasTools.stepCounter++;
+                canvasTools.population.forEach((block) => {
+                    block.processStep(canvasTools.grid, canvasTools.population);
+                });
+            } else {
+                canvasTools.stepCounter = 0;
+                canvasTools.makeSelections(canvasTools.population);
+            }
+        } else {
+            canvasTools.population.forEach((block) => {
+                block.processStep(canvasTools.grid, canvasTools.population);
+            });
+        }
         canvasTools.updateGrid();
         canvasTools.populateGrid();
+    },
+
+    makeSelections: (population) => {
+        // basic selection criteria
+        console.log('population', population);
+        for (let index = population.length - 1; index >= 0; index--) {
+            const block = population[index];
+            console.log('block', block, 'index', index);
+            if (block.x > canvasTools.dimensions / 2) {
+                // remove the block from the population
+                population.splice(index, 1);
+            }
+        }
+        setTimeout(() => {canvasTools.asexualReproduction(population)}, 1000);
+        
+    },
+
+    asexualReproduction: (population) => {
+        const newPopulation = [];
+        population.forEach((block) => {
+            function makeNew(i) {
+                --i;
+                const newBlock = new Block({
+                    x: block.x,
+                    y: block.y,
+                    brain: block.brain,
+                });
+                canvasTools.setRandomCoords(newBlock, newPopulation);
+                newPopulation.push(newBlock);
+                if (i > 0) {
+                    makeNew(i - 1);
+                }
+            }
+            makeNew(2);
+        });
+        // reduce new population amount to the starting population size
+        if (newPopulation.length > canvasTools.startingPopulation) {
+            newPopulation.splice(canvasTools.startingPopulation, newPopulation.length - canvasTools.startingPopulation);
+        }
+        canvasTools.population = newPopulation;
     },
 
     createGrid: () => {
@@ -155,7 +236,7 @@ export const canvasTools = {
         canvasTools.population.forEach((block) => {
             canvasTools.grid[block.x][block.y].occupant = block;
         });
-        console.log(canvasTools.grid);
+        //console.log(canvasTools.grid);
     },
 
     loop: (ctx, prevTime = 0) => {
